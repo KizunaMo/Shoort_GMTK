@@ -1,4 +1,7 @@
+using System;
 using Cysharp.Threading.Tasks;
+using Framework;
+using Module.CustomerControllerDomain;
 using UnityEngine;
 
 namespace ManagerDomain
@@ -6,6 +9,11 @@ namespace ManagerDomain
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
+
+        private int score;
+        
+        private CustomerController customerController;
+
 
         private void Awake()
         {
@@ -23,35 +31,51 @@ namespace ManagerDomain
 
         private void Start()
         {
+            score = 0;
             InitializeAllModule();
-            UIManager.Instance.RegisterBeforeNextCustomerEvent(AddATask);
-            UIManager.Instance.RegisterBeforeNextCustomerEvent(AnotherTask);
+            customerController = new CustomerController();
+            customerController.InitializeAsync().Forget();
         }
 
-        private async UniTask AnotherTask()
+        private void OnDestroy()
         {
-            Amo.Instance.Log($"I want to do aaaaaaa",Color.red);
-            await UniTask.Delay(1000);
-            Amo.Instance.Log($"I am done , after 5 seconds",Color.red);
+            customerController.Dispose();
         }
 
-        private async UniTask AddATask()
-        {
-            Amo.Instance.Log($"I want to do BBBBBBB");
-            await UniTask.Delay(1000);
-            Amo.Instance.Log($"I am done , and it cost 10 seconds");
-        }
 
         private void InitializeAllModule()
         {
             var uiManager = UIManager.Instance;
-            
-            
-            
-            
+
+
+
+
 #if UNITY_EDITOR
             var amo = Amo.Instance;
 #endif
+        }
+
+        public void AddScore()
+        {
+            score++;
+            UIManager.Instance.SetScoreText(score.ToString());
+        }
+
+        public void GameOver()
+        {
+            UniTask.Create(async () =>
+            {
+                Amo.Instance.Log($"Game Over", Color.red);
+                UIManager.Instance.ShowGameOverPanel(true);
+                await UniTask.Delay(TimeSpan.FromSeconds(Consts.GameOverShowTime));
+                UIManager.Instance.ShowMainuMenu(true);
+            });
+        }
+
+        public void ResetStatus()
+        {
+            score = 0;
+            UIManager.Instance.SetScoreText(score.ToString());
         }
     }
 }
