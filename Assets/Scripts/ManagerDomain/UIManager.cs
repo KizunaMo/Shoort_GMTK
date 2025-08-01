@@ -16,6 +16,8 @@ namespace ManagerDomain
 
         private CustomerController customerController;
 
+        public int CustomerHeight = 1300;
+
 
         public void Initialize()
         {
@@ -69,6 +71,12 @@ namespace ManagerDomain
         {
             Amo.Instance.Log($"Reset customer", Color.red);
             customerController.Reset();
+        }
+
+        [ContextMenu("RefreshList")]
+        public void Refresh()
+        {
+            customerController.Refresh();
         }
     }
 }

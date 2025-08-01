@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Framework;
+using ManagerDomain;
 using Module.RecycleListViewDomain.Items;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace Module.RecycleListViewDomain.Adapters
 
         public OnItemClickedHandler OnItemClicked { get; set; }
         public int Count => customerDatas.Count;
-        public float ItemHeight => 360f;
+        public float ItemCustomerHeight => UIManager.Instance.CustomerHeight;
 
         public ListItem CreateItem()
         {

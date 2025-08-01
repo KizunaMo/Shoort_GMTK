@@ -67,7 +67,7 @@ namespace Module.RecycleListViewDomain
         public void SetAdapter(IListViewAdapter adapter)
         {
             this.viewAdapter = adapter;
-            itemHeight = adapter.ItemHeight;
+            itemHeight = adapter.ItemCustomerHeight;
             _1OverItemHeight = 1f / itemHeight;
         }
 

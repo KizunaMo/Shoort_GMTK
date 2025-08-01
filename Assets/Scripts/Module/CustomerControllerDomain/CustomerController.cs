@@ -12,7 +12,7 @@ namespace Module.CustomerControllerDomain
     public class CustomerController
     {
         public int CurrentCustomerId => currentCustomerIndex;
-
+        
         private RecycledListViewModule cutomeristViewModule;
         private CustomerListAdapter listViewAdapter;
         private List<CustomerValueObject> customers;
@@ -69,7 +69,7 @@ namespace Module.CustomerControllerDomain
                     {
                         Uid = i,
                         Message = $"Customer index {i}",
-                        Color = Random.ColorHSV(),
+                        Color = Color.white
                     });
                 }
             }
@@ -86,6 +86,13 @@ namespace Module.CustomerControllerDomain
         private void OnItemClicked(ListItem item)
         {
             Amo.Instance.Log($"Clicked item at position {item.Position}: {customers[item.Position]}");
+        }
+
+        public void Refresh()
+        {
+            cutomeristViewModule.SetAdapter(listViewAdapter);
+            cutomeristViewModule.UpdateList();
+            Reset();
         }
     }
 }
