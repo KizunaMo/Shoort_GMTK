@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -9,10 +11,9 @@ namespace Module.RecycleListViewDomain.Items
 {
     public class CustomerListItem : ListItem
     {
-        public TMP_Text text;
-        
-        public SpriteRenderer[] spriteRenderers;
-        //public Image image;
+        private TMP_Text text;
+        private SpriteRenderer[] spriteRenderers;
+        private Animator animator;
         
         public override void Initialize()
         {
@@ -24,8 +25,9 @@ namespace Module.RecycleListViewDomain.Items
             {
                 Amo.Instance.Log($"{i + 1}: {spriteRenderers[i].name}");
             }
-            //image ??= GetComponentInChildren<Image>(true);
-            //Assert.IsNotNull(image);
+            
+            animator = GetComponentInChildren<Animator>(true);
+            Assert.IsNotNull(animator);
         }
 
         public override void UpdateContent(object data)
@@ -47,6 +49,15 @@ namespace Module.RecycleListViewDomain.Items
         public void SetColor(Color color)
         {
             //image.color = color;
+        }
+
+        public async UniTask PlayAnimationAsync(string animationName,float duration)
+        {
+            animator.CrossFade(animationName, duration);
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            float clipLength = stateInfo.length;
+
+            await UniTask.Delay(TimeSpan.FromSeconds(clipLength));
         }
     }
 }

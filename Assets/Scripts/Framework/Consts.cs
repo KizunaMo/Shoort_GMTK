@@ -12,7 +12,12 @@ namespace Framework
             public const string CutomerList = "CutomeristViewModule";
             public const string RestCustomerBtn = "RestCustomerBtn";
         }
-        
+
+
+        public class AnimationName
+        {
+            public const string Jump = "Jump";
+        }
 
         public class PrefabsPath
         {

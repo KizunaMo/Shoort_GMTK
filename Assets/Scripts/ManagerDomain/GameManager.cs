@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace ManagerDomain
@@ -23,6 +24,22 @@ namespace ManagerDomain
         private void Start()
         {
             InitializeAllModule();
+            UIManager.Instance.RegisterBeforeNextCustomerEvent(AddATask);
+            UIManager.Instance.RegisterBeforeNextCustomerEvent(AnotherTask);
+        }
+
+        private async UniTask AnotherTask()
+        {
+            Amo.Instance.Log($"I want to do aaaaaaa",Color.red);
+            await UniTask.Delay(1000);
+            Amo.Instance.Log($"I am done , after 5 seconds",Color.red);
+        }
+
+        private async UniTask AddATask()
+        {
+            Amo.Instance.Log($"I want to do BBBBBBB");
+            await UniTask.Delay(1000);
+            Amo.Instance.Log($"I am done , and it cost 10 seconds");
         }
 
         private void InitializeAllModule()

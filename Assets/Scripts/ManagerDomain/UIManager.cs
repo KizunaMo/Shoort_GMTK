@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Patterns;
@@ -16,7 +17,7 @@ namespace ManagerDomain
 
         private CustomerController customerController;
 
-        public int CustomerHeight = 1300;
+        public int CustomerHeight = 1300;//亂搞 但GAME JAM沒關係ＸＤ
 
 
         public void Initialize()
@@ -63,7 +64,7 @@ namespace ManagerDomain
         private void NextCustomer()
         {
             Amo.Instance.Log($"Next Customer! ", Color.green);
-            customerController.NextCustomer();
+            customerController.MoveToNextCustomerAsync().Forget();
         }
 
 
@@ -77,6 +78,22 @@ namespace ManagerDomain
         public void Refresh()
         {
             customerController.Refresh();
+        }
+
+        public void RegisterBeforeNextCustomerEvent(Func<UniTask> task)
+        {
+            if (!customerController.OnBeforeNextAsyncHandlers.Contains(task))
+            {
+                customerController.OnBeforeNextAsyncHandlers.Add(task);
+            }
+        }
+
+        public void UnregisterBeforeNextCustomerEvent(Func<UniTask> task)
+        {
+            if (customerController.OnBeforeNextAsyncHandlers.Remove(task))
+            {
+                Amo.Instance.Log("Task unregistered successfully.",Color.green);
+            }
         }
     }
 }

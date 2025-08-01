@@ -271,5 +271,25 @@ namespace Module.RecycleListViewDomain
         {
             KillAnimation();
         }
+        
+        public ListItem GetVisibleItemAtIndex(int index)
+        {
+            return items.TryGetValue(index, out ListItem item) ? item : null;
+        }
+
+        public bool IsIndexVisible(int index)
+        {
+            return items.ContainsKey(index);
+        }
+
+        public IEnumerable<ListItem> GetAllVisibleItems()
+        {
+            return items.Values;
+        }
+
+        public IReadOnlyDictionary<int, ListItem> GetVisibleItemsDict()
+        {
+            return items;
+        }
     }
 }
