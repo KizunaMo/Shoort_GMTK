@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System;
 using Framework.Patterns;
 using UnityEditor.SceneManagement;
 using UnityEngine;
