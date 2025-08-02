@@ -23,6 +23,7 @@ namespace ManagerDomain
         private GameObject mainMenu;
         private GameObject gameOverPanel;
 
+        private AudioController audioController;
 
         public void Initialize()
         {
@@ -49,6 +50,9 @@ namespace ManagerDomain
             mainMenu = GameObject.Find(Consts.SceneGameObjectName.MainMenuPanel);
             Assert.IsNotNull(mainMenu);
 
+            audioController = GameObject.Find(Consts.SceneGameObjectName.AudioController).GetComponent<AudioController>();
+            Assert.IsNotNull(audioController);
+
             RegisterEvents();
         }
 
@@ -63,9 +67,15 @@ namespace ManagerDomain
             scoreText.text = value;
         }
 
+        //開關GAME OVER CANVAS
         public void ShowGameOverPanel(bool isShow)
         {
             gameOverPanel.SetActive(isShow);
+            if (isShow)
+            {
+                //播放game over BGM
+                audioController.PlayGameOverBGM();
+            }
         }
 
         public void EnableCutBtnInteractable(bool isEnabled)
@@ -73,9 +83,15 @@ namespace ManagerDomain
             cutBtn.interactable = isEnabled;
         }
 
+        //開關主頁面 canvas
         public void ShowMainuMenu(bool isShow)
         {
             mainMenu.SetActive(isShow);
+            if (isShow)
+            {
+                //播放開頭畫面 BGM
+                audioController.PlayMenuBGM();
+            }
         }
 
         private void RegisterEvents()
@@ -122,6 +138,11 @@ namespace ManagerDomain
             EnableCutBtnInteractable(false);
             ShowMainuMenu(false);
             ShowGameOverPanel(false);
+            
+            {
+                //播放主遊戲 BGM
+                audioController.PlayMainGameBGM();
+            }
         }
     }
 }
