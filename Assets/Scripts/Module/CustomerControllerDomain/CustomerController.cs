@@ -50,7 +50,7 @@ namespace Module.CustomerControllerDomain
                 UIManager.Instance.EnableCutBtnInteractable(false);
                 if (customerCount > 0)
                 {
-                    var previoursCustomer = customers[customerCount - 1];
+                    var previousCustomer = customers[customerCount - 1];
                     var isSuccess = hairCutChecker.IsCutSuccess();
 
                     if (OnCheckCutResultHandlers != null)
@@ -63,18 +63,15 @@ namespace Module.CustomerControllerDomain
                     if (isSuccess)
                     {
                         GameManager.Instance.AddScore();
-                        await previoursCustomer.PlayAnimationAsync(Consts.AnimationName.Exit, Consts.AnimationName.EnterDuration);
+                        previousCustomer.PlayAnimationAsync(Consts.AnimationName.Exit, Consts.AnimationName.EnterDuration).Forget();
                     }
                     else
                     {
-                        await previoursCustomer.PlayAnimationAsync(Consts.AnimationName.Angry, Consts.AnimationName.AngryDuration);
+                        await previousCustomer.PlayAnimationAsync(Consts.AnimationName.Angry, Consts.AnimationName.AngryDuration);
                         RemoveAllCustomer();
                         GameManager.Instance.GameOver();
                         return;
                     }
-
-
-                    Object.Destroy(previoursCustomer.gameObject);
                 }
 
                 var newCustomer = CreateCustomer();
@@ -89,6 +86,7 @@ namespace Module.CustomerControllerDomain
 
         public void RemoveCustomer(Customer customer)
         {
+            Object.Destroy(customer.gameObject);
             if (customers.Contains(customer))
             {
                 customers.Remove(customer);
@@ -97,11 +95,11 @@ namespace Module.CustomerControllerDomain
 
         public void RemoveAllCustomer()
         {
-            Amo.Instance.Log("RemoveAllCustomer()",Color.red);
-            
+            Amo.Instance.Log("RemoveAllCustomer()", Color.red);
+
             var customersToRemove = customers.ToList();
             customers.Clear();
-    
+
             foreach (var customer in customersToRemove)
             {
                 if (customer != null && customer.gameObject != null)
