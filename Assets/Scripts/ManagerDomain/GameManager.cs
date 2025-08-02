@@ -11,9 +11,11 @@ namespace ManagerDomain
         public static GameManager Instance { get; private set; }
 
         private int score;
-        
+
         private CustomerController customerController;
 
+
+        private AudioSource BGMaudioSouece;
 
         private void Awake()
         {
@@ -32,6 +34,9 @@ namespace ManagerDomain
         private void Start()
         {
             score = 0;
+
+            BGMaudioSouece = GameObject.Find("BGM").GetComponent<AudioSource>();
+
             InitializeAllModule();
             customerController = new CustomerController();
             customerController.InitializeAsync().Forget();
@@ -48,8 +53,6 @@ namespace ManagerDomain
             var uiManager = UIManager.Instance;
 
 
-
-
 #if UNITY_EDITOR
             var amo = Amo.Instance;
 #endif
@@ -58,10 +61,10 @@ namespace ManagerDomain
         public void AddScore()
         {
             score++;
-            //加速
+            //嚙稼嚙緣
             Time.timeScale += 0.01f;
 
-            //音樂速度也變快
+            //嚙踝蕭嚙誰速嚙論也嚙豌改蕭
             AudioSource BGMaudioSouece;
             BGMaudioSouece = GameObject.Find("BGM").GetComponent<AudioSource>();
             BGMaudioSouece.pitch += 0.01f;
@@ -71,13 +74,11 @@ namespace ManagerDomain
 
         public void GameOver()
         {
-            //遊戲回復原速
-            Time.timeScale += 0f;
-            //音樂回復原速
-            AudioSource BGMaudioSouece;
-            BGMaudioSouece = GameObject.Find("BGM").GetComponent<AudioSource>();
-            BGMaudioSouece.pitch = 0f;
-
+            //嚙瘠嚙踝蕭嚙稷嚙稻嚙踝蕭t
+            Time.timeScale = 1f;
+            //嚙踝蕭嚙誰回嚙稻嚙踝蕭t
+            BGMaudioSouece.pitch = 1f;
+            
             UniTask.Create(async () =>
             {
                 Amo.Instance.Log($"Game Over", Color.red);

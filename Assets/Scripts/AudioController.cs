@@ -27,15 +27,18 @@ public class AudioController : MonoBehaviour
     {
         audioSourceBGM.Play();
     }
+
     public void StopBGM()
     {
         audioSourceBGM.Stop();
     }
+
     public void PlayMenuBGM()
     {
-        audioSourceBGM.resource=audioClipMenuBGM;
+        audioSourceBGM.resource = audioClipMenuBGM;
         audioSourceBGM.Play();
     }
+
     public void PlayMainGameBGM()
     {
         audioSourceBGM.resource = audioClipMainGameBGM;
@@ -44,6 +47,7 @@ public class AudioController : MonoBehaviour
 
     public void PlayGameOverBGM()
     {
+        Amo.Instance.Log($"Playing game over bgm. {audioClipGameOverBGM}");
         audioSourceBGM.resource = audioClipGameOverBGM;
         audioSourceBGM.Play();
     }
@@ -52,6 +56,4 @@ public class AudioController : MonoBehaviour
     {
         audioSourceSoundEffect.PlayOneShot(audioClipCutHair);
     }
-
-
 }
