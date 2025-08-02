@@ -25,7 +25,7 @@ public class Customer : MonoBehaviour
     }
 
     public async UniTask PlayAnimationAsync(string animationName, float transitionDuration = 0.1f, bool waitForComplete = true,
-        Action callBack = null)
+        Action<Customer> callBack = null)
     {
         if (!animator.enabled || animator.runtimeAnimatorController == null)
         {
@@ -45,7 +45,7 @@ public class Customer : MonoBehaviour
                 return true; 
             var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             var result = stateInfo.IsName(animationName) && !animator.IsInTransition(0);
-            callBack?.Invoke();
+            callBack?.Invoke(this);
             return result;
         });
 

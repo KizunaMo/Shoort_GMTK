@@ -33,6 +33,10 @@ namespace ManagerDomain
 
         public void Initialize()
         {
+            finalResultPanel = GameObject.Find(Consts.SceneGameObjectName.FinalResultCheckPanelUI).GetComponent<Transform>();
+            Assert.IsNotNull(finalResultPanel);
+            ShowFinalResultUI(false);
+            
             cutBtn = GameObject.Find(Consts.SceneGameObjectName.CutBtn).GetComponent<Button>();
             Assert.IsNotNull(cutBtn);
             EnableCutBtnInteractable(false);
@@ -71,14 +75,14 @@ namespace ManagerDomain
             };
             Assert.IsNotNull(timerUI);
 
+    
             RegisterEvents();
         }
 
-        // protected override void OnDestroy()
-        // {
-        //     base.OnDestroy();
-        //     UnregisterEvents();
-        // }
+        public void ShowFinalResultUI(bool isShow)
+        {
+            finalResultPanel.gameObject.SetActive(isShow);
+        }
 
         public void ShowTimerUI(bool isShow)
         {
@@ -108,7 +112,7 @@ namespace ManagerDomain
         //�}��GAME OVER CANVAS
         public void ShowGameOverPanel(bool isShow)
         {
-            gameOverPanel.SetActive(isShow);
+            //gameOverPanel.SetActive(isShow);
             if (isShow)
             {
                 //����game over BGM

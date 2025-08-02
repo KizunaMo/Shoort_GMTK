@@ -16,6 +16,8 @@ namespace ManagerDomain
 
 
         private AudioSource BGMaudioSouece;
+        
+        
 
         private void Awake()
         {
@@ -50,11 +52,10 @@ namespace ManagerDomain
 
         private void InitializeAllModule()
         {
-            var uiManager = UIManager.Instance;
-
+            UIManager.Instance.Initialize();
 
 #if UNITY_EDITOR
-            var amo = Amo.Instance;
+            Amo.Instance.Initialize();
 #endif
         }
 
@@ -82,8 +83,8 @@ namespace ManagerDomain
             UniTask.Create(async () =>
             {
                 Amo.Instance.Log($"Game Over", Color.red);
-                UIManager.Instance.ShowGameOverPanel(true);
-                await UniTask.Delay(TimeSpan.FromSeconds(Consts.GameOverShowTime));
+                // UIManager.Instance.ShowGameOverPanel(true);
+                await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
                 UIManager.Instance.ShowMainuMenu(true);
             });
         }

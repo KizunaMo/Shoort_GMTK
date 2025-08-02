@@ -7,6 +7,7 @@ using Framework;
 using ManagerDomain;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace Module.CustomerControllerDomain
 {
@@ -25,8 +26,8 @@ namespace Module.CustomerControllerDomain
             hairCutChecker = new HairCutChecker();
             hairCutChecker.OnCutFailed += () =>
             {
-                RemoveAllCustomer();
-                GameManager.Instance.GameOver();
+                //RemoveAllCustomer();
+                //FailedAsync().Forget();
             };
             OnCheckCutResultHandlers = new List<Func<UniTask>>();
             RegisterEvents();
@@ -71,13 +72,14 @@ namespace Module.CustomerControllerDomain
                     if (isSuccess)
                     {
                         GameManager.Instance.AddScore();
-                        previousCustomer.PlayAnimationAsync(Consts.AnimationName.Exit, Consts.AnimationName.EnterDuration).Forget();
+                        previousCustomer.PlayAnimationAsync(Consts.AnimationName.Exit, Consts.AnimationName.EnterDuration, callBack: (trans) => { })
+                            .Forget();
                     }
                     else
                     {
                         await previousCustomer.PlayAnimationAsync(Consts.AnimationName.Angry, Consts.AnimationName.AngryDuration);
-                        RemoveAllCustomer();
-                        GameManager.Instance.GameOver();
+
+                        FailedAsync().Forget();
                         return;
                     }
                 }
@@ -97,6 +99,37 @@ namespace Module.CustomerControllerDomain
             });
         }
 
+        private async UniTask FailedAsync()
+        {
+            RemoveAllCustomer();
+
+            //todo: 波失敗扭來扭去
+
+            await UniTask.Delay(TimeSpan.FromSeconds(Consts.AnimationName.FailedAnimationDuration));
+
+
+            GameManager.Instance.GameOver();
+        }
+
+        public Vector3 CalculateGridPosition(int index, Vector3 startPosition = default)
+        {
+            if (startPosition == default)
+                startPosition = new Vector3(-105, 100, 0);
+
+            const int itemsPerRow = 10;
+
+            int row = index / itemsPerRow; // 第幾排
+            int col = index % itemsPerRow; // 該排第幾個
+
+            Vector3 position = new Vector3(
+                startPosition.x + col * Consts.CustomKeywords.Hidth, // X: 由左往右
+                startPosition.y - row * Consts.CustomKeywords.Height, // Y: 往下排（3D空間）
+                startPosition.z
+            );
+
+            return position;
+        }
+
         public void RemoveCustomer(Customer customer)
         {
             Object.Destroy(customer.gameObject);
@@ -106,95 +139,96 @@ namespace Module.CustomerControllerDomain
             }
         }
 
-        [ContextMenu("Test")]
-        public void TestAnimat()
+        public void RemoveAllCustomer()
         {
-            UniTask.Create(async() =>
+            UniTask.Create(async () =>
             {
                 var customersToRemove = customers.ToList();
-                
-                const int itemsPerRow = 6;
-                const float itemWidth = 2.0f;
-                const float itemHeight = 1.5f;
-                const float entranceDelay = 0.1f;
-
+                customers.Clear();
+                UIManager.Instance.ShowFinalResultUI(true);
                 var animationTasks = new List<UniTask>();
 
                 for (int i = 0; i < customersToRemove.Count; i++)
                 {
-                    var customer = customersToRemove[i];
-                    Amo.Instance.Log($"Sho oooow () - {customer}");
-                    if (customer == null || customer.gameObject == null)
-                        continue;
-
-                    var targetTransform = customer.transform;
-    
-                    int row = i / itemsPerRow;
-                    int col = i % itemsPerRow;
-    
-                    Vector3 targetPosition = new Vector3(
-                        col * itemWidth,   
-                        -row * itemHeight, 
-                        0
-                    );
-
-                    targetTransform.localPosition = new Vector3(0, 50, 0);
-
-                    var animationTask = PlayCustomerAnimation(targetTransform, targetPosition, i * entranceDelay);
-                    animationTasks.Add(animationTask);
-                }
-
-                await UniTask.WhenAll(animationTasks);
-
-                await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
-
-                async UniTask PlayCustomerAnimation(Transform targetTransform, Vector3 targetPosition, float delay)
-                {
-                    await targetTransform.DOLocalMove(targetPosition, 3.5f)
-                        .SetEase(Ease.OutBack)
-                        .SetDelay(delay)
-                        .AsyncWaitForCompletion();
-    
-                    await targetTransform.DOShakePosition(0.3f, strength: new Vector3(0.5f, 0.5f, 0), vibrato: 10)
-                        .AsyncWaitForCompletion();
-                }
-
-            });
-       
-        }
-
-        public void RemoveAllCustomer()
-        {
-            //GAME JAM I want to write here. XD
-            //todo: show result canvas.
-            UniTask.Create(async() =>
-            {
-
-                var customersToRemove = customers.ToList();
-
-                for (int i = 0; i < customersToRemove.Count; i++)
-                {
                     customersToRemove[i].EnableAnimator(false);
-                    customersToRemove[i].transform.position = new Vector3(i*10, 0, 0);
-                }
-                
-                await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
-                
-                customers.Clear();
-                
-                Amo.Instance.Log("RemoveAllCustomer()", Color.red);
+                    Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}");
 
+                    if (i == customersToRemove.Count - 1)
+                    {
+                        customersToRemove[i].gameObject.transform.position = Vector3.one * 99999;
+                        Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}", Color.red);
+                        continue;
+                    }
+
+                    var pos = CalculateGridPosition(i);
+                    customersToRemove[i].gameObject.transform.localScale = new Vector3(1, 1, 1);
+
+                    var customerTask = AnimateCustomerToPositionWithBounce(customersToRemove[i], pos, i * 0.05f);
+                    animationTasks.Add(customerTask);
+                }
+
+                var cameraTask = AnimateCameraSize(Consts.CamFarway, 1.0f);
+
+                await UniTask.WhenAll(animationTasks.Concat(new[] { cameraTask }));
+
+                await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
 
                 foreach (var customer in customersToRemove)
                 {
-                    if (customer != null && customer.gameObject != null)
-                    {
-                        Amo.Instance.Log($"RemoveCustomer {customer.name}", Color.red);
+                    if (customer != null)
                         Object.Destroy(customer.gameObject);
-                    }
+                }
+                AnimateCameraSize(Consts.CamNearby, 0.1f);
+                UIManager.Instance.ShowFinalResultUI(false);
+            });
+        }
+
+        private async UniTask AnimateCustomerToPositionWithBounce(Customer customer, Vector3 targetPos, float delay)
+        {
+            var transform = customer.gameObject.transform;
+
+            await transform.DOLocalMove(targetPos, 0.8f)
+                .SetDelay(delay)
+                .SetEase(Ease.OutBack)
+                .AsyncWaitForCompletion();
+
+            await transform.DOPunchScale(Vector3.one * 0.1f, 0.3f, 3, 0.5f)
+                .AsyncWaitForCompletion();
+
+            StartIdleBouncing(transform);
+        }
+
+        private void StartIdleBouncing(Transform target)
+        {
+            if (target == null) return;
+
+            var originalPos = target.localPosition;
+
+            var sequence = DOTween.Sequence()
+                .SetLoops(-1, LoopType.Yoyo)
+                .Append(target.DOLocalMoveY(originalPos.y + Random.Range(0.3f, 1f), Random.Range(0.1f, 0.5f)))
+                .SetEase(Ease.InOutSine);
+
+            sequence.OnStepComplete(() =>
+            {
+                if (target != null)
+                {
+                    float randomHeight = Random.Range(0.1f, 0.5f);
+                    float randomDuration = Random.Range(0.1f, 0.3f);
+
+                    target.DOLocalMoveY(originalPos.y + randomHeight, randomDuration)
+                        .SetEase(Ease.InOutSine);
                 }
             });
-       
+        }
+
+        private async UniTask AnimateCameraSize(float targetSize, float duration)
+        {
+            if (Camera.main == null) return;
+
+            await Camera.main.DOOrthoSize(targetSize, duration)
+                .SetEase(Ease.OutQuart)
+                .AsyncWaitForCompletion();
         }
 
 
@@ -212,7 +246,7 @@ namespace Module.CustomerControllerDomain
 
     public class HairCutChecker : IDisposable
     {
-        public  event Action OnCutFailed;
+        public event Action OnCutFailed;
         public int totalHairCount;
 
         public HairCutChecker()

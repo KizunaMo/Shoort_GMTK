@@ -23,6 +23,7 @@ namespace Framework
             public const string AudioController = "AudioController";
             
             public const string TimerUI = "Timer";
+            public const string FinalResultCheckPanelUI = "FinalResultPanel";
         }
 
 
@@ -39,6 +40,9 @@ namespace Framework
             
             public const string DuringCutting = "DuringCutting";
             public const float DuringCuttingDuration = 2f;
+            
+            //失敗扭來扭去
+            public const float FailedAnimationDuration = 5f;
         }
 
         public class PrefabsPath
@@ -63,10 +67,16 @@ namespace Framework
             public const string HandRoot = "HandRoot";
             
             public const string HairStyleRoot = "HairStyleRoot";
+            
+            public const float Hidth = 15 ;
+            public const float Height = 15 ;
         }
         
         public static Vector3 spawnPosition = new Vector3(-80f, -20f, 0f);
-        public static float GameOverShowTime = 2.0f;
+        public static float GameOverShowTime = 3.0f;
         public static float FinalResultShowTime = 5.0f;
+
+        public static float CamFarway = 100;
+        public static float CamNearby = 50;
     }
 }
