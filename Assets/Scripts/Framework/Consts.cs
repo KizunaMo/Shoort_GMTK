@@ -19,6 +19,8 @@ namespace Framework
             
             public const string MainMenuPanel = "MainMenu";
             public const string StarGameBtn = "StartBtn";
+
+            public const string AudioController = "AudioController";
         }
 
 
