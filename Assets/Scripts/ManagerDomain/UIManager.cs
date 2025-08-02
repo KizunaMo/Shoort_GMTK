@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 namespace ManagerDomain
 {
+    //TEST
     public class UIManager : LazyMonoSingleton<UIManager>, IInitializable
     {
         public AudioController AudioController => audioController;
