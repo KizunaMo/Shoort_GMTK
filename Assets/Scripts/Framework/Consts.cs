@@ -67,5 +67,6 @@ namespace Framework
         
         public static Vector3 spawnPosition = new Vector3(-80f, -20f, 0f);
         public static float GameOverShowTime = 2.0f;
+        public static float FinalResultShowTime = 5.0f;
     }
 }

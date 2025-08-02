@@ -30,6 +30,8 @@ namespace ManagerDomain
 
         private CircularTimerUI timerUI;
 
+        private Transform finalResultPanel;
+
         public void Initialize()
         {
             cutBtn = GameObject.Find(Consts.SceneGameObjectName.CutBtn).GetComponent<Button>();
@@ -73,11 +75,11 @@ namespace ManagerDomain
             RegisterEvents();
         }
 
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            UnregisterEvents();
-        }
+        // protected override void OnDestroy()
+        // {
+        //     base.OnDestroy();
+        //     UnregisterEvents();
+        // }
 
         public void ShowTimerUI(bool isShow)
         {
