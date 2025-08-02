@@ -37,7 +37,7 @@ namespace ManagerDomain
             finalResultPanel = GameObject.Find(Consts.SceneGameObjectName.FinalResultCheckPanelUI).GetComponent<Transform>();
             Assert.IsNotNull(finalResultPanel);
             ShowFinalResultUI(false);
-            
+
             cutBtn = GameObject.Find(Consts.SceneGameObjectName.CutBtn).GetComponent<Button>();
             Assert.IsNotNull(cutBtn);
             EnableCutBtnInteractable(false);
@@ -45,11 +45,11 @@ namespace ManagerDomain
             nextCustomerBtn = GameObject.Find(Consts.SceneGameObjectName.NextCustomerBtn).GetComponent<Button>();
             Assert.IsNotNull(nextCustomerBtn);
             nextCustomerBtn.gameObject.SetActive(false);
-            
+
             resetBtn = GameObject.Find(Consts.SceneGameObjectName.RestCustomerBtn).GetComponent<Button>();
             Assert.IsNotNull(resetBtn);
             resetBtn.gameObject.SetActive(false);
-            
+
             scoreText = GameObject.Find(Consts.SceneGameObjectName.ScoreText).GetComponent<TMP_Text>();
             Assert.IsNotNull(scoreText);
             scoreText.text = "0";
@@ -76,12 +76,17 @@ namespace ManagerDomain
             };
             Assert.IsNotNull(timerUI);
 
-    
+
             RegisterEvents();
         }
 
         public void ShowFinalResultUI(bool isShow)
         {
+            if (isShow)
+            {
+                audioController.PlayGameOverBGM();
+            }
+
             finalResultPanel.gameObject.SetActive(isShow);
         }
 
@@ -111,15 +116,15 @@ namespace ManagerDomain
         }
 
         //�}��GAME OVER CANVAS
-        public void ShowGameOverPanel(bool isShow)
-        {
-            //gameOverPanel.SetActive(isShow);
-            if (isShow)
-            {
-                //����game over BGM
-                audioController.PlayGameOverBGM();
-            }
-        }
+        // public void ShowGameOverPanel(bool isShow)
+        // {
+        //     //gameOverPanel.SetActive(isShow);
+        //     if (isShow)
+        //     {
+        //         //����game over BGM
+        //         audioController.PlayGameOverBGM();
+        //     }
+        // }
 
         public void EnableCutBtnInteractable(bool isEnabled)
         {
@@ -181,11 +186,10 @@ namespace ManagerDomain
             GameManager.Instance.ResetStatus();
             EnableCutBtnInteractable(false);
             ShowMainuMenu(false);
-            ShowGameOverPanel(false);
+            // ShowGameOverPanel(false);
             //����D�C�� BGM
             audioController.PlayMainGameBGM();
             NextCustomer();
         }
-
     }
 }
