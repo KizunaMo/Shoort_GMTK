@@ -53,6 +53,8 @@ namespace Module.CustomerControllerDomain
             UniTask.Create(async () =>
             {
                 UIManager.Instance.EnableCutBtnInteractable(false);
+                UIManager.Instance.ShowTimerUI(false);
+                UIManager.Instance.StopTimerUI();
                 if (customerCount > 0)
                 {
                     var previousCustomer = customers[customerCount - 1];
@@ -85,6 +87,11 @@ namespace Module.CustomerControllerDomain
 
                 hairCutChecker.UpdateNewCheckCount(newCustomer.HairCount);
                 await newCustomer.PlayAnimationAsync(Consts.AnimationName.Enter, Consts.AnimationName.EnterDuration);
+                UIManager.Instance.ShowTimerUI(true);
+                UIManager.Instance.ResumeTimerUI();
+                UIManager.Instance.StartTimeer();
+                //在中間 剪頭髮的過程
+                //await newCustomer.PlayAnimationAsync(Consts.AnimationName.DuringCuttingDuration, Consts.AnimationName.EnterDuration);
                 UIManager.Instance.EnableCutBtnInteractable(true);
             });
         }

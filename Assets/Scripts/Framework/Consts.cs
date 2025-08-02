@@ -21,6 +21,8 @@ namespace Framework
             public const string StarGameBtn = "StartBtn";
 
             public const string AudioController = "AudioController";
+            
+            public const string TimerUI = "Timer";
         }
 
 
@@ -34,6 +36,9 @@ namespace Framework
             public const float ExitDuration = 2f;
             public const string Angry = "Angry";
             public const float AngryDuration = 1.5f;
+            
+            public const string DuringCutting = "DuringCutting";
+            public const float DuringCuttingDuration = 2f;
         }
 
         public class PrefabsPath
