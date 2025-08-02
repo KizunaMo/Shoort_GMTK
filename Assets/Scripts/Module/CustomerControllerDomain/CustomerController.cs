@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Framework;
 using ManagerDomain;
 using UnityEngine;
@@ -105,21 +106,95 @@ namespace Module.CustomerControllerDomain
             }
         }
 
+        [ContextMenu("Test")]
+        public void TestAnimat()
+        {
+            UniTask.Create(async() =>
+            {
+                var customersToRemove = customers.ToList();
+                
+                const int itemsPerRow = 6;
+                const float itemWidth = 2.0f;
+                const float itemHeight = 1.5f;
+                const float entranceDelay = 0.1f;
+
+                var animationTasks = new List<UniTask>();
+
+                for (int i = 0; i < customersToRemove.Count; i++)
+                {
+                    var customer = customersToRemove[i];
+                    Amo.Instance.Log($"Sho oooow () - {customer}");
+                    if (customer == null || customer.gameObject == null)
+                        continue;
+
+                    var targetTransform = customer.transform;
+    
+                    int row = i / itemsPerRow;
+                    int col = i % itemsPerRow;
+    
+                    Vector3 targetPosition = new Vector3(
+                        col * itemWidth,   
+                        -row * itemHeight, 
+                        0
+                    );
+
+                    targetTransform.localPosition = new Vector3(0, 50, 0);
+
+                    var animationTask = PlayCustomerAnimation(targetTransform, targetPosition, i * entranceDelay);
+                    animationTasks.Add(animationTask);
+                }
+
+                await UniTask.WhenAll(animationTasks);
+
+                await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
+
+                async UniTask PlayCustomerAnimation(Transform targetTransform, Vector3 targetPosition, float delay)
+                {
+                    await targetTransform.DOLocalMove(targetPosition, 3.5f)
+                        .SetEase(Ease.OutBack)
+                        .SetDelay(delay)
+                        .AsyncWaitForCompletion();
+    
+                    await targetTransform.DOShakePosition(0.3f, strength: new Vector3(0.5f, 0.5f, 0), vibrato: 10)
+                        .AsyncWaitForCompletion();
+                }
+
+            });
+       
+        }
+
         public void RemoveAllCustomer()
         {
-            Amo.Instance.Log("RemoveAllCustomer()", Color.red);
-
-            var customersToRemove = customers.ToList();
-            customers.Clear();
-
-            foreach (var customer in customersToRemove)
+            //GAME JAM I want to write here. XD
+            //todo: show result canvas.
+            UniTask.Create(async() =>
             {
-                if (customer != null && customer.gameObject != null)
+
+                var customersToRemove = customers.ToList();
+
+                for (int i = 0; i < customersToRemove.Count; i++)
                 {
-                    Amo.Instance.Log($"RemoveCustomer {customer.name}", Color.red);
-                    Object.Destroy(customer.gameObject);
+                    customersToRemove[i].EnableAnimator(false);
+                    customersToRemove[i].transform.position = new Vector3(i*10, 0, 0);
                 }
-            }
+                
+                await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
+                
+                customers.Clear();
+                
+                Amo.Instance.Log("RemoveAllCustomer()", Color.red);
+
+
+                foreach (var customer in customersToRemove)
+                {
+                    if (customer != null && customer.gameObject != null)
+                    {
+                        Amo.Instance.Log($"RemoveCustomer {customer.name}", Color.red);
+                        Object.Destroy(customer.gameObject);
+                    }
+                }
+            });
+       
         }
 
 

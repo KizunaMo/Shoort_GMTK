@@ -70,4 +70,9 @@ public class Customer : MonoBehaviour
         flavor.UnregiserEvents();
     }
 
+    public void EnableAnimator(bool isEnabled)
+    {
+        animator.enabled = isEnabled;
+    }
+
 }
