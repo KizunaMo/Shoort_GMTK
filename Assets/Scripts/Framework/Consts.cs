@@ -38,7 +38,25 @@ namespace Framework
         {
             public const string CustomerItemPrefab = "Prefabs/Customer";
         }
-        
+
+
+        public class CustomKeywords
+        {
+            public const string HairRoot = "HairRoot";
+            public const string BlinkRoot = "BlinkRoot";
+            public const string EyesRoot = "EyesRoot";
+            public const string MouthRoot = "MouthRoot";
+            public const string MakeupRoot = "MakeupRoot";
+            public const string FaceRoot = "FaceRoot";
+            public const string HeadRoot = "HeadRoot";
+            public const string DecorationRoot = "DecorationRoot";
+            public const string HipRoot = "HipsRoot";
+            public const string BodyRoot = "BodyRoot";
+            public const string FootRoot = "FootRoot";
+            public const string HandRoot = "HandRoot";
+            
+            public const string HairStyleRoot = "HairStyleRoot";
+        }
         
         public static Vector3 spawnPosition = new Vector3(-80f, -20f, 0f);
         public static float GameOverShowTime = 2.0f;

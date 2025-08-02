@@ -22,6 +22,11 @@ namespace Module.CustomerControllerDomain
             await UniTask.CompletedTask;
             customers = new List<Customer>();
             hairCutChecker = new HairCutChecker();
+            hairCutChecker.OnCutFailed += () =>
+            {
+                RemoveAllCustomer();
+                GameManager.Instance.GameOver();
+            };
             OnCheckCutResultHandlers = new List<Func<UniTask>>();
             RegisterEvents();
         }
@@ -52,7 +57,7 @@ namespace Module.CustomerControllerDomain
                 {
                     var previousCustomer = customers[customerCount - 1];
                     var isSuccess = hairCutChecker.IsCutSuccess();
-
+                    previousCustomer.UnregisterFlaverEvents();
                     if (OnCheckCutResultHandlers != null)
                     {
                         var allTask = OnCheckCutResultHandlers.Select(t => t.Invoke());
@@ -125,6 +130,7 @@ namespace Module.CustomerControllerDomain
 
     public class HairCutChecker : IDisposable
     {
+        public  event Action OnCutFailed;
         public int totalHairCount;
 
         public HairCutChecker()
@@ -142,20 +148,29 @@ namespace Module.CustomerControllerDomain
             UIManager.Instance.OnCut -= CutHair;
         }
 
+        private int successIndex = 4;
+
         private void CutHair()
         {
             totalHairCount--;
             if (totalHairCount < 0)
             {
-                GameManager.Instance.GameOver();
+                OnCutFailed?.Invoke();
             }
 
-            Amo.Instance.Log($"Cut hair {totalHairCount}", Color.cyan);
+            if (totalHairCount == successIndex)
+            {
+                Amo.Instance.Log($"Cut hair success!! {totalHairCount}", Color.green);
+            }
+            else
+            {
+                Amo.Instance.Log($"Cut hair {totalHairCount}", Color.cyan);
+            }
         }
 
         public bool IsCutSuccess()
         {
-            var isSuccess = totalHairCount == 3;
+            var isSuccess = totalHairCount == successIndex;
             Amo.Instance.Log($" total hair count is {totalHairCount} ");
             return isSuccess;
         }

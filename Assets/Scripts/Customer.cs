@@ -6,28 +6,19 @@ using UnityEngine.Assertions;
 
 public class Customer : MonoBehaviour
 {
-    public int HairCount => allHairStyleCount;
+    public int HairCount => flavor.GetHairCount();
 
-    private SpriteRenderer[] spriteRenderers;
+    //private SpriteRenderer[] spriteRenderers;
     private Animator animator;
-    private int allHairStyleCount;
+    //private int allHairStyleCount;
+    private Flavor flavor;
 
     public void Initialize()
     {
-        allHairStyleCount = 0;
+        flavor = GetComponent<Flavor>();
+        flavor.Init();
+        Assert.IsNotNull(flavor);
         Amo.Instance.Log($"Initialize: ");
-        spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-        for (int i = 0; i < spriteRenderers.Length; i++)
-        {
-            Amo.Instance.Log($"{i + 1}: {spriteRenderers[i].name}");
-            if (spriteRenderers[i].name.Contains("hair"))
-            {
-                allHairStyleCount++;
-            }
-        }
-
-        Amo.Instance.Log($"All hair style count: {allHairStyleCount}");
-
         animator = GetComponentInChildren<Animator>(true);
         Assert.IsNotNull(animator);
         transform.position = Consts.spawnPosition;
@@ -50,6 +41,8 @@ public class Customer : MonoBehaviour
 
         await UniTask.WaitUntil(() =>
         {
+            if (animator == null || this == null)
+                return true; 
             var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             var result = stateInfo.IsName(animationName) && !animator.IsInTransition(0);
             callBack?.Invoke();
@@ -58,6 +51,8 @@ public class Customer : MonoBehaviour
 
         await UniTask.WaitUntil(() =>
         {
+            if (animator == null || this == null)
+                return true; 
             var info = animator.GetCurrentAnimatorStateInfo(0);
             var result = info.normalizedTime >= 0.95f;
             return result;
@@ -69,4 +64,10 @@ public class Customer : MonoBehaviour
         Amo.Instance.Log($"Destory self: {gameObject.name}");
         Destroy(gameObject);
     }
+
+    public void UnregisterFlaverEvents()
+    {
+        flavor.UnregiserEvents();
+    }
+
 }
