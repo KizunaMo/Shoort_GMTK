@@ -81,13 +81,13 @@ namespace ManagerDomain
             //���֦^�_��t
             BGMaudioSouece.pitch = 1f;
             
-            UniTask.Create(async () =>
-            {
-                Amo.Instance.Log($"Game Over", Color.red);
-                // UIManager.Instance.ShowGameOverPanel(true);
-                await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
-                UIManager.Instance.ShowMainuMenu(true);
-            });
+            // UniTask.Create(async () =>
+            // {
+            //     Amo.Instance.Log($"Game Over", Color.red);
+            //     //UIManager.Instance.ShowGameOverPanel(true);
+            //     //await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
+            //     //UIManager.Instance.ShowMainuMenu(true);
+            // });
         }
 
         public void ResetStatus()

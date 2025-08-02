@@ -117,7 +117,7 @@ namespace Module.CustomerControllerDomain
             if (startPosition == default)
                 startPosition = new Vector3(-105, 100, 0);
 
-            const int itemsPerRow = 10;
+            const int itemsPerRow = 15;
 
             int row = index / itemsPerRow; // 第幾排
             int col = index % itemsPerRow; // 該排第幾個
@@ -172,7 +172,11 @@ namespace Module.CustomerControllerDomain
 
                 await UniTask.WhenAll(animationTasks.Concat(new[] { cameraTask }));
 
-                await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
+                if (customers.Count > 2)
+                {
+                    var waitTime = CalculateWaitTimeByCount(customersToRemove.Count);
+                    await UniTask.Delay(TimeSpan.FromSeconds(waitTime));
+                }
 
                 foreach (var customer in customersToRemove)
                 {
@@ -180,9 +184,23 @@ namespace Module.CustomerControllerDomain
                         Object.Destroy(customer.gameObject);
                 }
                 AnimateCameraSize(Consts.CamNearby, 0.1f);
+           
                 UIManager.Instance.ShowFinalResultUI(false);
+                UIManager.Instance.ShowMainuMenu(true);
             });
         }
+        
+        private float CalculateWaitTimeByCount(int customerCount)
+        {
+            float baseTime = 0.6f;           // 基礎等待時間
+            float timePerCustomer = 0.3f;  // 每個客戶增加的時間
+            float maxWaitTime = Consts.FinalResultShowTime;        // 最大等待時間
+            float minWaitTime = 0.1f;        // 最小等待時間
+    
+            float calculatedTime = baseTime + (customerCount * timePerCustomer);
+            return Mathf.Clamp(calculatedTime, minWaitTime, maxWaitTime);
+        }
+
 
         private async UniTask AnimateCustomerToPositionWithBounce(Customer customer, Vector3 targetPos, float delay)
         {
