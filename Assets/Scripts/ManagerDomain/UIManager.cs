@@ -80,7 +80,7 @@ namespace ManagerDomain
 
         public void ShowTimerUI(bool isShow)
         {
-            timerUI.gameObject.SetActive(isShow);
+            timerUI.gameObject.SetActive(true);
         }
 
         public void StartTimeer()
@@ -90,7 +90,7 @@ namespace ManagerDomain
 
         public void StopTimerUI()
         {
-            timerUI.PauseTimer();
+            //timerUI.PauseTimer();
         }
 
         public void ResumeTimerUI()
@@ -116,7 +116,8 @@ namespace ManagerDomain
 
         public void EnableCutBtnInteractable(bool isEnabled)
         {
-            cutBtn.interactable = isEnabled;
+            //cutBtn.interactable = isEnabled;
+            cutBtn.interactable = true;
         }
 
         //�}���D���� canvas
