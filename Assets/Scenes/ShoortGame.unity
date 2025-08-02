@@ -926,6 +926,8 @@ MonoBehaviour:
   audioClipMainGameBGM: {fileID: 8300000, guid: 2c2a3aa3e9a3c4ab5b5d3bb164e15af9, type: 3}
   audioClipGameOverBGM: {fileID: 8300000, guid: c72b64ac7a4257d49a094a5a32f7f06f, type: 3}
   audioClipCutHair: {fileID: 8300000, guid: 96a25c645f042b94b9db36352542b007, type: 3}
+  audioClipSuccess: {fileID: 8300000, guid: 8beb020286cfe5e4db734e9b5b001461, type: 3}
+  audioClipFail: {fileID: 8300000, guid: f832ad236070dbc44b8e4b7f87391f15, type: 3}
 --- !u!1 &662969555
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,6 +1200,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 678145686}
   m_CullTransparentMesh: 1
+--- !u!1 &680311197
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 680311198}
+  m_Layer: 0
+  m_Name: EffectController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &680311198
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680311197}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &682425992
 GameObject:
   m_ObjectHideFlags: 0
@@ -3253,3 +3286,4 @@ SceneRoots:
   - {fileID: 578966016}
   - {fileID: 1985766423}
   - {fileID: 152250046}
+  - {fileID: 680311198}

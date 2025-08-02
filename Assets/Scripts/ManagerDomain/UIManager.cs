@@ -12,6 +12,7 @@ namespace ManagerDomain
 {
     public class UIManager : LazyMonoSingleton<UIManager>, IInitializable
     {
+        public AudioController AudioController => audioController;
         public event Action OnNextCustomer;
         public event Action OnCut;
         public event Action OnReset;
@@ -179,5 +180,6 @@ namespace ManagerDomain
             audioController.PlayMainGameBGM();
             NextCustomer();
         }
+
     }
 }
