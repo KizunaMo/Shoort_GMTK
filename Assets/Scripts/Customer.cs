@@ -7,11 +7,11 @@ using UnityEngine.Assertions;
 public class Customer : MonoBehaviour
 {
     public int HairCount => allHairStyleCount;
-    
+
     private SpriteRenderer[] spriteRenderers;
     private Animator animator;
     private int allHairStyleCount;
-        
+
     public void Initialize()
     {
         allHairStyleCount = 0;
@@ -25,37 +25,48 @@ public class Customer : MonoBehaviour
                 allHairStyleCount++;
             }
         }
+
         Amo.Instance.Log($"All hair style count: {allHairStyleCount}");
-            
+
         animator = GetComponentInChildren<Animator>(true);
         Assert.IsNotNull(animator);
         transform.position = Consts.spawnPosition;
     }
-    
-    public async UniTask PlayAnimationAsync(string animationName, float transitionDuration = 0.1f, bool waitForComplete = true)
+
+    public async UniTask PlayAnimationAsync(string animationName, float transitionDuration = 0.1f, bool waitForComplete = true,
+        Action callBack = null)
     {
         if (!animator.enabled || animator.runtimeAnimatorController == null)
         {
             return;
         }
-    
+
         animator.CrossFade(animationName, transitionDuration);
 
         if (!waitForComplete)
         {
             return;
         }
-    
-        await UniTask.WaitUntil(() => 
+
+        await UniTask.WaitUntil(() =>
         {
             var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            return stateInfo.IsName(animationName) && !animator.IsInTransition(0);
+            var result = stateInfo.IsName(animationName) && !animator.IsInTransition(0);
+            callBack?.Invoke();
+            return result;
         });
-    
-        await UniTask.WaitUntil(() => 
+
+        await UniTask.WaitUntil(() =>
         {
             var info = animator.GetCurrentAnimatorStateInfo(0);
-            return info.normalizedTime >= 0.95f;
+            var result = info.normalizedTime >= 0.95f;
+            return result;
         });
+    }
+
+    public void DestorySelf()
+    {
+        Amo.Instance.Log($"Destory self: {gameObject.name}");
+        Destroy(gameObject);
     }
 }
