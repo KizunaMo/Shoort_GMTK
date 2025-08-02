@@ -58,11 +58,26 @@ namespace ManagerDomain
         public void AddScore()
         {
             score++;
+            //加速
+            Time.timeScale += 0.01f;
+
+            //音樂速度也變快
+            AudioSource BGMaudioSouece;
+            BGMaudioSouece = GameObject.Find("BGM").GetComponent<AudioSource>();
+            BGMaudioSouece.pitch += 0.01f;
+
             UIManager.Instance.SetScoreText(score.ToString());
         }
 
         public void GameOver()
         {
+            //遊戲回復原速
+            Time.timeScale += 0f;
+            //音樂回復原速
+            AudioSource BGMaudioSouece;
+            BGMaudioSouece = GameObject.Find("BGM").GetComponent<AudioSource>();
+            BGMaudioSouece.pitch = 0f;
+
             UniTask.Create(async () =>
             {
                 Amo.Instance.Log($"Game Over", Color.red);
