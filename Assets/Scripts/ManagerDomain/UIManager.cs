@@ -164,26 +164,26 @@ namespace ManagerDomain
 
         private void CutHair()
         {
-            Amo.Instance.Log($"Cut ! ", Color.green);
+            //Amo.Instance.Log($"Cut ! ", Color.green);
             OnCut?.Invoke();
         }
 
         private void NextCustomer()
         {
-            Amo.Instance.Log($"Next Customer! ", Color.green);
+            //Amo.Instance.Log($"Next Customer! ", Color.green);
             OnNextCustomer?.Invoke();
         }
 
 
         private void ResetCustomer()
         {
-            Amo.Instance.Log($"Reset customer", Color.red);
+            //Amo.Instance.Log($"Reset customer", Color.red);
             OnReset?.Invoke();
         }
 
         private void StartGame()
         {
-            Amo.Instance.Log($"Start Game! ", Color.green);
+            //Amo.Instance.Log($"Start Game! ", Color.green);
             GameManager.Instance.ResetStatus();
             EnableCutBtnInteractable(false);
             ShowMainuMenu(false);

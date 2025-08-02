@@ -50,7 +50,7 @@ public class AudioController : MonoBehaviour
 
     public void PlayGameOverBGM()
     {
-        Amo.Instance.Log($"Playing game over bgm. {audioClipGameOverBGM}");
+        // Amo.Instance.Log($"Playing game over bgm. {audioClipGameOverBGM}");
         audioSourceBGM.resource = audioClipGameOverBGM;
         audioSourceBGM.Play();
     }
