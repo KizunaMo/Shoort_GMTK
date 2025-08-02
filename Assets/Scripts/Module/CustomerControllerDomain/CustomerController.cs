@@ -117,7 +117,7 @@ namespace Module.CustomerControllerDomain
             if (startPosition == default)
                 startPosition = new Vector3(-105, 100, 0);
 
-            const int itemsPerRow = 10;
+            const int itemsPerRow = 15;
 
             int row = index / itemsPerRow; // 第幾排
             int col = index % itemsPerRow; // 該排第幾個
