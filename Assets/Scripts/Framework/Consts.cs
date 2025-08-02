@@ -32,9 +32,9 @@ namespace Framework
             public const string Jump = "Jump";
             public const float JumpDuration = 1f;
             public const string Enter = "Enter";
-            public const float EnterDuration = 2f;
+            public const float EnterDuration = 0.5f;
             public const string Exit = "Exit";
-            public const float ExitDuration = 2f;
+            public const float ExitDuration = 1f;
             public const string Angry = "Angry";
             public const float AngryDuration = 1.5f;
             

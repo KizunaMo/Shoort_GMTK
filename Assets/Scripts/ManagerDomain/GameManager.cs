@@ -66,15 +66,16 @@ namespace ManagerDomain
             Time.timeScale += 0.01f;
 
             //���ֳt�פ]�ܧ�
-            AudioSource BGMaudioSouece;
-            BGMaudioSouece = GameObject.Find("BGM").GetComponent<AudioSource>();
             BGMaudioSouece.pitch += 0.01f;
+
+            UIManager.Instance.AudioController.PlaySoundEffect_Success();
 
             UIManager.Instance.SetScoreText(score.ToString());
         }
 
         public void GameOver()
         {
+
             //�C���^�_��t
             Time.timeScale = 1f;
             //���֦^�_��t

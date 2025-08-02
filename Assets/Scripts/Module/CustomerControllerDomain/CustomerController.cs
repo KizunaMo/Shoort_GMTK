@@ -77,6 +77,7 @@ namespace Module.CustomerControllerDomain
                     }
                     else
                     {
+                        UIManager.Instance.AudioController.PlaySoundEffect_Fail();
                         await previousCustomer.PlayAnimationAsync(Consts.AnimationName.Angry, Consts.AnimationName.AngryDuration);
 
                         FailedAsync().Forget();

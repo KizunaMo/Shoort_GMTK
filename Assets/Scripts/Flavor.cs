@@ -266,14 +266,15 @@ public class Flavor : MonoBehaviour
     {
         Amo.Instance.Log($"ChangeHairStyle {currentHairIndex}");
         var root = allHairStyles[currentHairPackageStyleIndex];
-        var allInclive =  AreAllImmediateChildrenInactive(root);
+        var allInclive =  IsOnlyLastChildActive(root);
         if (!allInclive)
         {
-            var child = FindFirstActiveChild(root);
-            if (child != null)
+            var childTuple = FindNextOfFirstActiveChild(root);
+            if (childTuple.nextItem != null)
             {
-                Amo.Instance.Log($"Check first active child => {child}",Color.cyan);
-                child.gameObject.SetActive(false);
+                Amo.Instance.Log($"Check first active child => {childTuple.activeItem} // {childTuple.nextItem}",Color.cyan);
+                childTuple.nextItem.gameObject.SetActive(true);
+                childTuple.activeItem.gameObject.SetActive(false);
             }
         }
         else
@@ -308,34 +309,51 @@ public class Flavor : MonoBehaviour
         }
     }
     
-    Transform FindFirstActiveChild(Transform root)
+    (Transform activeItem,Transform nextItem) FindNextOfFirstActiveChild(Transform root)
     {
-        Amo.Instance.Log($"FindFirstActiveChild");
+        Amo.Instance.Log("FindNextOfFirstActiveChild");
+
         for (int i = 0; i < root.childCount; i++)
         {
             var child = root.GetChild(i);
-            Amo.Instance.Log($"Check {child} active => {child.gameObject.activeInHierarchy}");
-            if (child.gameObject.activeInHierarchy)
+            Amo.Instance.Log($"Check {child.name} active => {child.gameObject.activeInHierarchy}");
 
+            if (child.gameObject.activeInHierarchy)
             {
-                Amo.Instance.Log($"return => {child.gameObject.name}");
-                return child;
+                int nextIndex = i + 1;
+
+                if (nextIndex < root.childCount)
+                {
+                    var nextChild = root.GetChild(nextIndex);
+                    Amo.Instance.Log($"Found active at {child.name}, next is {nextChild.name}");
+                    return (child, nextChild);
+                }
+                else
+                {
+                    Amo.Instance.Log($"Found active at {child.name}, but it's the last one => return null");
+                    return (child, null);
+                }
             }
         }
-        return null;
+
+        Amo.Instance.Log("No active child found => return null");
+        return (null, null);
     }
     
-    bool AreAllImmediateChildrenInactive(Transform root)
+    bool IsOnlyLastChildActive(Transform root)
     {
-        for (int i = 0; i < root.childCount; i++)
+        int lastIndex = root.childCount - 1;
+        if (lastIndex < 0)
+            return false; // No children
+
+        for (int i = 0; i < lastIndex; i++)
         {
-            var child = root.GetChild(i);
-            if (child.gameObject.activeInHierarchy)
-            {
-                return false;
-            }
+            if (root.GetChild(i).gameObject.activeInHierarchy)
+                return false; // Any earlier child is active
         }
-        return true;
+
+        // Check if the last child is active
+        return root.GetChild(lastIndex).gameObject.activeInHierarchy;
     }
 
 

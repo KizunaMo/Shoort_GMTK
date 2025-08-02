@@ -12,6 +12,7 @@ namespace ManagerDomain
 {
     public class UIManager : LazyMonoSingleton<UIManager>, IInitializable
     {
+        public AudioController AudioController => audioController;
         public event Action OnNextCustomer;
         public event Action OnCut;
         public event Action OnReset;
@@ -86,7 +87,7 @@ namespace ManagerDomain
 
         public void ShowTimerUI(bool isShow)
         {
-            timerUI.gameObject.SetActive(isShow);
+            timerUI.gameObject.SetActive(true);
         }
 
         public void StartTimeer()
@@ -96,7 +97,7 @@ namespace ManagerDomain
 
         public void StopTimerUI()
         {
-            timerUI.PauseTimer();
+            //timerUI.PauseTimer();
         }
 
         public void ResumeTimerUI()
@@ -122,7 +123,8 @@ namespace ManagerDomain
 
         public void EnableCutBtnInteractable(bool isEnabled)
         {
-            cutBtn.interactable = isEnabled;
+            //cutBtn.interactable = isEnabled;
+            cutBtn.interactable = true;
         }
 
         //�}���D���� canvas
@@ -184,5 +186,6 @@ namespace ManagerDomain
             audioController.PlayMainGameBGM();
             NextCustomer();
         }
+
     }
 }

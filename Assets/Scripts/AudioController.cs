@@ -11,6 +11,9 @@ public class AudioController : MonoBehaviour
     public AudioClip audioClipGameOverBGM;
 
     public AudioClip audioClipCutHair;
+    public AudioClip audioClipSuccess;
+    public AudioClip audioClipFail;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -56,4 +59,13 @@ public class AudioController : MonoBehaviour
     {
         audioSourceSoundEffect.PlayOneShot(audioClipCutHair);
     }
+    public void PlaySoundEffect_Success()
+    {
+        audioSourceSoundEffect.PlayOneShot(audioClipSuccess);
+    }
+    public void PlaySoundEffect_Fail()
+    {
+        audioSourceSoundEffect.PlayOneShot(audioClipFail);
+    }
+
 }
