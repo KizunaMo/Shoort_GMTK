@@ -175,20 +175,30 @@ public class Flavor : MonoBehaviour
     {
         foreach (var hairSpriteRenderer in allHairStyles)
         {
-            var spriteRenderer = hairSpriteRenderer.GetComponentInChildren<SpriteRenderer>(true);
-            spriteRenderer.color = color;
+
+            var spriteRenderers = hairSpriteRenderer.GetComponentsInChildren<SpriteRenderer>(true);
+            foreach (var hairSprite in spriteRenderers)
+            {
+                hairSprite.color = color;
+            }
+            
         }
     }
 
     public Color RandomHairColor()
     {
         var index = Random.Range(0, Consts.HairColor.TotalHairCount-1);
+        
+        Amo.Instance.Log($"RandomHairFrontColor？ {index}",Color.cyan);
         if (ColorUtility.TryParseHtmlString(Consts.AllHairsHex[index], out var color))
         {
+            Amo.Instance.Log($"有顏色？{color}  // {index}",Color.cyan);
             return color;
         }
         else
         {
+            Amo.Instance.Log($"???????");
+            Amo.Instance.Log($"顏色不對？",Color.red);
             return Color.gray;
         }
     }
@@ -196,15 +206,14 @@ public class Flavor : MonoBehaviour
     public Color RandomHairFrontColor()
     {
         var index = Random.Range(0, Consts.HairColor.TotalFrontHairCount-1);
-        Amo.Instance.Log($"RandomHairFrontColor？ {index}",Color.cyan);
         if (ColorUtility.TryParseHtmlString(Consts.AllHairFrontsHex[index], out var color))
         {
-            Amo.Instance.Log($"有顏色？{color}  // {index}",Color.cyan);
+           
             return color;
         }
         else
         {
-            Amo.Instance.Log($"顏色不對？",Color.red);
+           
             return Color.gray;
         }
     }

@@ -19,12 +19,15 @@ namespace ManagerDomain
         public event Action OnNextCustomer;
         public event Action OnCut;
         public event Action OnReset;
+        
+        public event Action OnCheckResult;
 
         private TMP_Text scoreText;
         private Button cutBtn;
         private Button nextCustomerBtn; //Note: for testing
         private Button resetBtn; //Note: for testing
         private Button startGameBtn;
+        private Button checkReultBtn;
 
         private GameObject mainMenu;
         private GameObject gameOverPanel;
@@ -41,6 +44,10 @@ namespace ManagerDomain
 
         public void Initialize()
         {
+            checkReultBtn = GameObject.Find("CheckBtn").GetComponent<Button>();
+            Assert.IsNotNull(checkReultBtn);
+            
+            
             openingController = GameObject.Find(Consts.SceneGameObjectName.OpeningController).GetComponent<OpeningController>();
             Assert.IsNotNull(openingController);
 
@@ -169,6 +176,7 @@ namespace ManagerDomain
             nextCustomerBtn.onClick.AddListener(NextCustomer);
             resetBtn.onClick.AddListener(ResetCustomer);
             startGameBtn.onClick.AddListener(StartGame);
+            checkReultBtn.onClick.AddListener(OnCheckResultBtnClicked);
         }
 
 
@@ -178,6 +186,7 @@ namespace ManagerDomain
             nextCustomerBtn?.onClick.RemoveAllListeners();
             resetBtn?.onClick.RemoveAllListeners();
             startGameBtn?.onClick.RemoveAllListeners();
+            checkReultBtn?.onClick.RemoveAllListeners();
         }
 
 
@@ -214,10 +223,19 @@ namespace ManagerDomain
                 NextCustomer();
 
             });
-            //Amo.Instance.Log($"Start Game! ", Color.green);
-            //EnableCutBtnInteractable(false);
-            // ShowGameOverPanel(false);
-            //����D�C�� BGM
         }
+    
+        private void OnCheckResultBtnClicked()
+        {
+            ShowMainuMenu(true);
+            ShowFinalResultUI(false);
+            OnCheckResult?.Invoke();
+        }
+
+        public void SetResultBtnInteractble(bool isEnabled)
+        {
+            checkReultBtn.interactable = isEnabled;
+        }
+
     }
 }
