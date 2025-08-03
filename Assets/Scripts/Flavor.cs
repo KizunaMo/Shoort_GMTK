@@ -266,10 +266,10 @@ public class Flavor : MonoBehaviour
     {
         // Amo.Instance.Log($"ChangeHairStyle {currentHairIndex}");
         var root = allHairStyles[currentHairPackageStyleIndex];
-        var allInclive =  IsOnlyLastChildActive(root);
+        var allInclive =  IsOnlyLastChildActive(root); 
+        var childTuple = FindNextOfFirstActiveChild(root);
         if (!allInclive)
         {
-            var childTuple = FindNextOfFirstActiveChild(root);
             if (childTuple.nextItem != null)
             {
                 //Amo.Instance.Log($"Check first active child => {childTuple.activeItem} // {childTuple.nextItem}",Color.cyan);
@@ -279,6 +279,8 @@ public class Flavor : MonoBehaviour
         }
         else
         {
+            childTuple.activeItem.gameObject.SetActive(false);
+            
             if (!cuted2)
             {
                 // Amo.Instance.Log($"多砍第二刀");
