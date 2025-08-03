@@ -73,7 +73,7 @@ public class Flavor : MonoBehaviour
         DisableRoot(blinkRoot);
         DisableRoot(makeupRoot);
         resultFaceAggregate.HideAll();
-        Amo.Instance.Log($"??? 成功還是失敗？ {isSuccessCutResult}");
+        //Amo.Instance.Log($"??? 成功還是失敗？ {isSuccessCutResult}");
         if (isSuccessCutResult)
         {
             
@@ -319,43 +319,43 @@ public class Flavor : MonoBehaviour
         var hasAnyActiveChild = HasAnyActiveChild(root);
         var childTuple = FindNextOfFirstActiveChild(root);
         
-        Amo.Instance.Log($"=== CutAndChangeHairStyle Debug ===");
-        Amo.Instance.Log($"allInactive: {hasAnyActiveChild}");
-        Amo.Instance.Log($"cuted2: {cuted2}, cuted3: {cuted3}, cutedNoMore: {cutedNoMore}");
-        Amo.Instance.Log($"Active children count: {GetActiveChildrenCount(root)}");
+        // Amo.Instance.Log($"=== CutAndChangeHairStyle Debug ===");
+        // Amo.Instance.Log($"allInactive: {hasAnyActiveChild}");
+        // Amo.Instance.Log($"cuted2: {cuted2}, cuted3: {cuted3}, cutedNoMore: {cutedNoMore}");
+        // Amo.Instance.Log($"Active children count: {GetActiveChildrenCount(root)}");
         
         if (hasAnyActiveChild)
         {
             isSuccessCutResult = false;
-            Amo.Instance.Log($"A {gameObject.name}");
+            // Amo.Instance.Log($"A {gameObject.name}");
             if (childTuple.nextItem != null)
             {
-                Amo.Instance.Log($"Check first active child => {childTuple.activeItem.gameObject.name} // {childTuple.nextItem.gameObject.name}",Color.cyan);
+                //Amo.Instance.Log($"Check first active child => {childTuple.activeItem.gameObject.name} // {childTuple.nextItem.gameObject.name}",Color.cyan);
                 childTuple.nextItem.gameObject.SetActive(true);
                 childTuple.activeItem.gameObject.SetActive(false);
                 if (childTuple.nextItem.gameObject.name == Consts.CustomKeywords.SuccessCutHairIndex)
                 {
-                    Amo.Instance.Log($"A 成功 Checking hair {childTuple.activeItem.name}");
+                    //Amo.Instance.Log($"A 成功 Checking hair {childTuple.activeItem.name}");
                     isSuccessCutResult = true;
                 }
            }        
             //Amo.Instance.Log($"Checking hair {childTuple.activeItem.name} // {childTuple.nextItem.name}");
             if (childTuple.activeItem != null && childTuple.activeItem.gameObject.name == Consts.CustomKeywords.SuccessCutHairIndex)
             {
-                Amo.Instance.Log($"BChecking hair {childTuple.activeItem.name}");
+                //Amo.Instance.Log($"BChecking hair {childTuple.activeItem.name}");
                 childTuple.activeItem.gameObject.SetActive(false);
                 isSuccessCutResult = false;
             }
             
-            Amo.Instance.Log($"???? isSuccessCutResult {isSuccessCutResult}",Color.green);
+            //Amo.Instance.Log($"???? isSuccessCutResult {isSuccessCutResult}",Color.green);
         }
         else
         {
             isSuccessCutResult = false;
-            Amo.Instance.Log($"B {gameObject.name}");
+            //Amo.Instance.Log($"B {gameObject.name}");
             if (!cuted2)
             {
-                Amo.Instance.Log($"多砍第二刀");
+                // Amo.Instance.Log($"多砍第二刀");
                 DisplayHairRootAndDecorationRoot(false);
                 cuted2 = true;
                 return;
@@ -363,7 +363,7 @@ public class Flavor : MonoBehaviour
 
             if (!cuted3)
             {
-                Amo.Instance.Log($"多砍第３刀");
+                // Amo.Instance.Log($"多砍第３刀");
                 headRoot.gameObject.SetActive(true);
                 ShowCurrentHead();
                 DisplayHeadOne(true);
@@ -373,7 +373,7 @@ public class Flavor : MonoBehaviour
 
             if (!cutedNoMore)
             {
-                Amo.Instance.Log($"砍到不能再砍");
+                // Amo.Instance.Log($"砍到不能再砍");
                 headRoot.gameObject.SetActive(true);
                 HideAll(allHead);
                 DisplayHead0(true);

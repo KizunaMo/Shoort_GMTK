@@ -145,9 +145,9 @@ namespace ManagerDomain
         //�}���D���� canvas
         public void ShowMainuMenu(bool isShow)
         {
+                mainMenu.SetActive(isShow);
             UniTask.Create(async () =>
             {
-                mainMenu.SetActive(isShow);
                 await UniTask.Delay(TimeSpan.FromSeconds(1));
                 if (isShow)
                 {

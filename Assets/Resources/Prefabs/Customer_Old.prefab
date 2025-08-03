@@ -10,7 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8653719598885068355, guid: bbb674c838ba34f639c3b4d220eff879, type: 3}
       propertyPath: m_Name
-      value: Customer
+      value: Customer_Old
+      objectReference: {fileID: 0}
+    - target: {fileID: -7625945710307249215, guid: bbb674c838ba34f639c3b4d220eff879, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: bbb674c838ba34f639c3b4d220eff879, type: 3}
       propertyPath: m_LocalPosition.x
@@ -59,6 +63,18 @@ PrefabInstance:
     - target: {fileID: -4960843768383150587, guid: bbb674c838ba34f639c3b4d220eff879, type: 3}
       propertyPath: m_Name
       value: HARoot
+      objectReference: {fileID: 0}
+    - target: {fileID: -2658188989979883227, guid: bbb674c838ba34f639c3b4d220eff879, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2263283124339014566, guid: bbb674c838ba34f639c3b4d220eff879, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8071616983814641318, guid: bbb674c838ba34f639c3b4d220eff879, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
