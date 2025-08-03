@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using Framework;
 using ManagerDomain;
 using UnityEngine;
@@ -62,6 +64,9 @@ public class Flavor : MonoBehaviour
         RandomFoot();
         RandomHand();
 
+        SetHairFrontColor(RandomHairFrontColor());
+        SetHairColor(RandomHairColor());
+        
         UIManager.Instance.OnCut += CutAndChangeHairStyle;
         UIManager.Instance.OnEachTimerEnd += ShowResultFace;
     }
@@ -76,7 +81,6 @@ public class Flavor : MonoBehaviour
         //Amo.Instance.Log($"??? 成功還是失敗？ {isSuccessCutResult}");
         if (isSuccessCutResult)
         {
-            
             resultFaceAggregate.ShowRandomHappiness();
         }
         else
@@ -90,7 +94,7 @@ public class Flavor : MonoBehaviour
     {
         root.gameObject.SetActive(false);
     }
-    
+
     private void OnDestroy()
     {
         UnregiserEvents();
@@ -147,10 +151,63 @@ public class Flavor : MonoBehaviour
             if (parent.GetChild(i).gameObject.activeSelf)
                 return true;
         }
+
         return false;
     }
-    
-    //private int currentHairIndex;
+
+
+    private void SetHairFrontColor(Color color)
+    {
+        foreach (var hairSpriteRenderer in allHair)
+        {
+            var spriteRenderer = hairSpriteRenderer.GetComponentInChildren<SpriteRenderer>(true);
+            spriteRenderer.color = color;
+        }
+
+        foreach (var hairSpriteRenderer in allDecoration)
+        {
+            var spriteRenderer = hairSpriteRenderer.GetComponentInChildren<SpriteRenderer>(true);
+            spriteRenderer.color = color;
+        }
+    }
+
+    private void SetHairColor(Color color)
+    {
+        foreach (var hairSpriteRenderer in allHairStyles)
+        {
+            var spriteRenderer = hairSpriteRenderer.GetComponentInChildren<SpriteRenderer>(true);
+            spriteRenderer.color = color;
+        }
+    }
+
+    public Color RandomHairColor()
+    {
+        var index = Random.Range(0, Consts.HairColor.TotalHairCount-1);
+        if (ColorUtility.TryParseHtmlString(Consts.AllHairsHex[index], out var color))
+        {
+            return color;
+        }
+        else
+        {
+            return Color.gray;
+        }
+    }
+
+    public Color RandomHairFrontColor()
+    {
+        var index = Random.Range(0, Consts.HairColor.TotalFrontHairCount-1);
+        Amo.Instance.Log($"RandomHairFrontColor？ {index}",Color.cyan);
+        if (ColorUtility.TryParseHtmlString(Consts.AllHairFrontsHex[index], out var color))
+        {
+            Amo.Instance.Log($"有顏色？{color}  // {index}",Color.cyan);
+            return color;
+        }
+        else
+        {
+            Amo.Instance.Log($"顏色不對？",Color.red);
+            return Color.gray;
+        }
+    }
 
     public void RandomCustomerHairStyle()
     {
@@ -303,6 +360,7 @@ public class Flavor : MonoBehaviour
     private bool cuted3;
 
     private bool isSuccessCutResult;
+
     private int GetActiveChildrenCount(Transform parent)
     {
         int count = 0;
@@ -311,19 +369,21 @@ public class Flavor : MonoBehaviour
             if (parent.GetChild(i).gameObject.activeSelf)
                 count++;
         }
+
         return count;
     }
+
     private void CutAndChangeHairStyle()
     {
         var root = allHairStyles[currentHairPackageStyleIndex];
         var hasAnyActiveChild = HasAnyActiveChild(root);
         var childTuple = FindNextOfFirstActiveChild(root);
-        
+
         // Amo.Instance.Log($"=== CutAndChangeHairStyle Debug ===");
         // Amo.Instance.Log($"allInactive: {hasAnyActiveChild}");
         // Amo.Instance.Log($"cuted2: {cuted2}, cuted3: {cuted3}, cutedNoMore: {cutedNoMore}");
         // Amo.Instance.Log($"Active children count: {GetActiveChildrenCount(root)}");
-        
+
         if (hasAnyActiveChild)
         {
             isSuccessCutResult = false;
@@ -338,7 +398,8 @@ public class Flavor : MonoBehaviour
                     //Amo.Instance.Log($"A 成功 Checking hair {childTuple.activeItem.name}");
                     isSuccessCutResult = true;
                 }
-           }        
+            }
+
             //Amo.Instance.Log($"Checking hair {childTuple.activeItem.name} // {childTuple.nextItem.name}");
             if (childTuple.activeItem != null && childTuple.activeItem.gameObject.name == Consts.CustomKeywords.SuccessCutHairIndex)
             {
@@ -346,7 +407,7 @@ public class Flavor : MonoBehaviour
                 childTuple.activeItem.gameObject.SetActive(false);
                 isSuccessCutResult = false;
             }
-            
+
             //Amo.Instance.Log($"???? isSuccessCutResult {isSuccessCutResult}",Color.green);
         }
         else
@@ -418,20 +479,20 @@ public class Flavor : MonoBehaviour
     {
         if (parentTransform == null)
             throw new ArgumentNullException(nameof(parentTransform));
-    
+
         int childCount = parentTransform.childCount;
         if (childCount == 0)
             return false;
-    
+
         int lastChildIndex = childCount - 1;
         bool lastChildIsActive = false;
-    
+
         for (int i = 0; i < childCount; i++)
         {
-            bool isChildActive = checkHierarchy 
+            bool isChildActive = checkHierarchy
                 ? parentTransform.GetChild(i).gameObject.activeInHierarchy
                 : parentTransform.GetChild(i).gameObject.activeSelf;
-        
+
             if (i == lastChildIndex)
             {
                 lastChildIsActive = isChildActive;
@@ -441,7 +502,7 @@ public class Flavor : MonoBehaviour
                 return false;
             }
         }
-    
+
         return lastChildIsActive;
     }
 
