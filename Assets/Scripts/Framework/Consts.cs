@@ -81,7 +81,7 @@ namespace Framework
         {
             // hair fornt total 1-20  (20)  :: hair 1-8 (8)
             public const int TotalFrontHairCount = 20;
-            public const int TotalHairCount = 8;
+            // public const int TotalHairCount = 8;
 
             public const string HairFornt_1_Hex = "#b615a25";
             public const string HairFornt_2_Hex = "#ebce84";
@@ -131,17 +131,17 @@ namespace Framework
             Consts.HairColor.HairFornt_20_Hex
         };
         
-        public static string[] AllHairsHex = new string[]
-        {
-            Consts.HairColor.HairFornt_1_Hex,
-            Consts.HairColor.HairFornt_2_Hex,
-            Consts.HairColor.HairFornt_3_Hex,
-            Consts.HairColor.HairFornt_4_Hex,
-            Consts.HairColor.HairFornt_5_Hex,
-            Consts.HairColor.HairFornt_6_Hex,
-            Consts.HairColor.HairFornt_7_Hex,
-            Consts.HairColor.HairFornt_8_Hex,
-        };
+        // public static string[] AllHairsHex = new string[]
+        // {
+        //     Consts.HairColor.HairFornt_1_Hex,
+        //     Consts.HairColor.HairFornt_2_Hex,
+        //     Consts.HairColor.HairFornt_3_Hex,
+        //     Consts.HairColor.HairFornt_4_Hex,
+        //     Consts.HairColor.HairFornt_5_Hex,
+        //     Consts.HairColor.HairFornt_6_Hex,
+        //     Consts.HairColor.HairFornt_7_Hex,
+        //     Consts.HairColor.HairFornt_8_Hex,
+        // };
 
         public static Vector3 spawnPosition = new Vector3(-80f, -20f, 0f);
         public static float GameOverShowTime = 3.0f;

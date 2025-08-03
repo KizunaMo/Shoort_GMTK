@@ -3700,8 +3700,14 @@ MonoBehaviour:
   allFoot: []
   allHand: []
   allHairStyles: []
-  CurrentHairStylePackage: []
+  CurrentHairStylePackage:
+  - {fileID: 4957622192451654857}
+  - {fileID: 3515624886970696640}
+  - {fileID: 2891817172928548704}
   resultFaceAggregate: {fileID: 5424858429612087487}
+  PerfectAllHair:
+  - {fileID: 2891817172928548704}
+  - {fileID: 3515624886970696640}
 --- !u!95 &4130262427593565403
 Animator:
   serializedVersion: 7
@@ -3737,6 +3743,11 @@ Transform:
 --- !u!4 &2335315509283354065 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3573228653110509163, guid: 3675bae0bee82485b8bfbd1fa12a087b, type: 3}
+  m_PrefabInstance: {fileID: 1296506255911504826}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2891817172928548704 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4170282641497162970, guid: 3675bae0bee82485b8bfbd1fa12a087b, type: 3}
   m_PrefabInstance: {fileID: 1296506255911504826}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &3571363942752237209 stripped
@@ -4469,6 +4480,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c4fb2cca75c64b1d98b76b6c073ed35, type: 3}
+--- !u!4 &4957622192451654857 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4117142133717002227, guid: 2c4fb2cca75c64b1d98b76b6c073ed35, type: 3}
+  m_PrefabInstance: {fileID: 9074196806313866042}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8578590351454338061 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 784545055012884279, guid: 2c4fb2cca75c64b1d98b76b6c073ed35, type: 3}

@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using Framework;
 using ManagerDomain;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 public class Flavor : MonoBehaviour
@@ -64,9 +65,13 @@ public class Flavor : MonoBehaviour
         RandomFoot();
         RandomHand();
 
-        SetHairFrontColor(RandomHairFrontColor());
-        SetHairColor(RandomHairColor());
-        
+        var hairColor = RandomHairFrontColor();
+        SetHairFrontColor(hairColor);
+        SetHairColor(hairColor);
+        for (int i = 0; i < PerfectAllHair.Length; i++)
+        {
+            PerfectAllHair[i].gameObject.SetActive(false);
+        }
         UIManager.Instance.OnCut += CutAndChangeHairStyle;
         UIManager.Instance.OnEachTimerEnd += ShowResultFace;
     }
@@ -82,6 +87,7 @@ public class Flavor : MonoBehaviour
         if (isSuccessCutResult)
         {
             resultFaceAggregate.ShowRandomHappiness();
+            SetPerfectHair();
         }
         else
         {
@@ -187,18 +193,15 @@ public class Flavor : MonoBehaviour
 
     public Color RandomHairColor()
     {
-        var index = Random.Range(0, Consts.HairColor.TotalHairCount-1);
+        var index = Random.Range(0, Consts.HairColor.TotalFrontHairCount-1);
         
-        Amo.Instance.Log($"RandomHairFrontColor？ {index}",Color.cyan);
-        if (ColorUtility.TryParseHtmlString(Consts.AllHairsHex[index], out var color))
+        if (ColorUtility.TryParseHtmlString(Consts.AllHairFrontsHex[index], out var color))
         {
-            Amo.Instance.Log($"有顏色？{color}  // {index}",Color.cyan);
+            //Amo.Instance.Log($"有顏色？{color}  // {index}",Color.cyan);
             return color;
         }
         else
         {
-            Amo.Instance.Log($"???????");
-            Amo.Instance.Log($"顏色不對？",Color.red);
             return Color.gray;
         }
     }
@@ -208,7 +211,6 @@ public class Flavor : MonoBehaviour
         var index = Random.Range(0, Consts.HairColor.TotalFrontHairCount-1);
         if (ColorUtility.TryParseHtmlString(Consts.AllHairFrontsHex[index], out var color))
         {
-           
             return color;
         }
         else
@@ -217,6 +219,25 @@ public class Flavor : MonoBehaviour
             return Color.gray;
         }
     }
+
+    public void SetPerfectHair()
+    {
+        HideAll(allHair);//f
+        HideAll(allHairStyles);//b
+        HideAll(allDecoration);
+        hairRoot.gameObject.SetActive(true);
+        decorationRoot.gameObject.SetActive(true);
+        for (int i = 0; i < PerfectAllHair.Length; i++)
+        {
+            PerfectAllHair[i].gameObject.SetActive(true);
+        }
+        
+        var hair1 = CurrentHairStylePackage[CurrentHairStylePackage.Length - 1];
+        hair1.gameObject.SetActive(true);
+        hair1.gameObject.transform.parent.gameObject.SetActive(true);
+    }
+
+    public Transform[] PerfectAllHair;
 
     public void RandomCustomerHairStyle()
     {
