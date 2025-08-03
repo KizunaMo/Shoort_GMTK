@@ -61,7 +61,7 @@ namespace ManagerDomain
 
         public void AddScore()
         {
-            score++;
+            score+=1000;
             //�[�t
             Time.timeScale += 0.01f;
 
