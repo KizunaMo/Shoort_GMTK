@@ -70,6 +70,8 @@ namespace Framework
             public const string HandRoot = "HandRoot";
             
             public const string HairStyleRoot = "HairStyleRoot";
+
+            public const string SuccessCutHairIndex = "hair1";
             
             public const float Hidth = 15 ;
             public const float Height = 15 ;

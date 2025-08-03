@@ -13,6 +13,8 @@ namespace ManagerDomain
     //TEST
     public class UIManager : LazyMonoSingleton<UIManager>, IInitializable
     {
+        public event Action OnEachTimerEnd;
+        
         public AudioController AudioController => audioController;
         public event Action OnNextCustomer;
         public event Action OnCut;
@@ -82,6 +84,7 @@ namespace ManagerDomain
             ShowTimerUI(false);
             timerUI.OnTimerEnd += () =>
             {
+                OnEachTimerEnd?.Invoke();
                 timerUI.ResumeTimer();
                 NextCustomer();
             };
@@ -148,8 +151,8 @@ namespace ManagerDomain
         {
             UniTask.Create(async () =>
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(1));
                 mainMenu.SetActive(isShow);
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
                 if (isShow)
                 {
                     //����}�Y�e�� BGM
