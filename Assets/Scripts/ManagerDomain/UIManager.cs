@@ -33,8 +33,13 @@ namespace ManagerDomain
 
         private Transform finalResultPanel;
 
+        private OpeningController openingController;
+
         public void Initialize()
         {
+            openingController = GameObject.Find(Consts.SceneGameObjectName.OpeningController).GetComponent<OpeningController>();
+            Assert.IsNotNull(openingController);
+
             finalResultPanel = GameObject.Find(Consts.SceneGameObjectName.FinalResultCheckPanelUI).GetComponent<Transform>();
             Assert.IsNotNull(finalResultPanel);
             ShowFinalResultUI(false);
@@ -141,6 +146,7 @@ namespace ManagerDomain
             {
                 //����}�Y�e�� BGM
                 audioController.PlayMenuBGM();
+                openingController.ResetOpening();
             }
         }
 
@@ -183,14 +189,21 @@ namespace ManagerDomain
 
         private void StartGame()
         {
-            Amo.Instance.Log($"Start Game! ", Color.green);
-            GameManager.Instance.ResetStatus();
-            EnableCutBtnInteractable(false);
-            ShowMainuMenu(false);
+            UniTask.Create(async() =>
+            {
+                var waitTime = TimeSpan.FromSeconds(1);
+                await UniTask.Delay(waitTime);
+
+                GameManager.Instance.ResetStatus();
+                ShowMainuMenu(false);
+                audioController.PlayMainGameBGM();
+                NextCustomer();
+
+            });
+            //Amo.Instance.Log($"Start Game! ", Color.green);
+            //EnableCutBtnInteractable(false);
             // ShowGameOverPanel(false);
             //����D�C�� BGM
-            audioController.PlayMainGameBGM();
-            NextCustomer();
         }
     }
 }

@@ -106,10 +106,10 @@ namespace Module.CustomerControllerDomain
 
             //todo: 波失敗扭來扭去
 
+            GameManager.Instance.SetPitchAndTimeScale(1,1);
             await UniTask.Delay(TimeSpan.FromSeconds(Consts.AnimationName.FailedAnimationDuration));
 
 
-            GameManager.Instance.GameOver();
         }
 
         public Vector3 CalculateGridPosition(int index, Vector3 startPosition = default)

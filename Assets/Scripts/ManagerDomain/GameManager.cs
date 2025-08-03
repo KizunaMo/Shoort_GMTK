@@ -73,21 +73,27 @@ namespace ManagerDomain
             UIManager.Instance.SetScoreText(score.ToString());
         }
 
-        public void GameOver()
-        {
+        //public void GameOver()
+        //{
 
-            //�C���^�_��t
-            Time.timeScale = 1f;
-            //���֦^�_��t
-            BGMaudioSouece.pitch = 1f;
+        //    //�C���^�_��t
+        //    Time.timeScale = 1f;
+        //    //���֦^�_��t
+        //    BGMaudioSouece.pitch = 1f;
             
-            // UniTask.Create(async () =>
-            // {
-            //     Amo.Instance.Log($"Game Over", Color.red);
-            //     //UIManager.Instance.ShowGameOverPanel(true);
-            //     //await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
-            //     //UIManager.Instance.ShowMainuMenu(true);
-            // });
+        //    // UniTask.Create(async () =>
+        //    // {
+        //    //     Amo.Instance.Log($"Game Over", Color.red);
+        //    //     //UIManager.Instance.ShowGameOverPanel(true);
+        //    //     //await UniTask.Delay(TimeSpan.FromSeconds(Consts.FinalResultShowTime));
+        //    //     //UIManager.Instance.ShowMainuMenu(true);
+        //    // });
+        //}
+
+        public void SetPitchAndTimeScale(float pitch,float timeScale)
+        {
+            Time.timeScale = timeScale;
+            BGMaudioSouece.pitch = pitch;
         }
 
         public void ResetStatus()
