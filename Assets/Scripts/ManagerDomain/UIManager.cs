@@ -35,10 +35,14 @@ namespace ManagerDomain
 
         private OpeningController openingController;
 
+        private RulerController rulerController;
 
         public void Initialize()
         {
             openingController = GameObject.Find(Consts.SceneGameObjectName.OpeningController).GetComponent<OpeningController>();
+            Assert.IsNotNull(openingController);
+
+            rulerController = GameObject.Find(Consts.SceneGameObjectName.RulerController).GetComponent<RulerController>();
             Assert.IsNotNull(openingController);
 
             finalResultPanel = GameObject.Find(Consts.SceneGameObjectName.FinalResultCheckPanelUI).GetComponent<Transform>();
@@ -151,6 +155,7 @@ namespace ManagerDomain
                     //����}�Y�e�� BGM
                     audioController.PlayMenuBGM();
                     openingController.ResetOpening();
+                    rulerController.RulerIdle();
                 }
             });
         }
@@ -202,6 +207,7 @@ namespace ManagerDomain
                 GameManager.Instance.ResetStatus();
                 ShowMainuMenu(false);
                 audioController.PlayMainGameBGM();
+                rulerController.RulerPlay();
                 NextCustomer();
 
             });
