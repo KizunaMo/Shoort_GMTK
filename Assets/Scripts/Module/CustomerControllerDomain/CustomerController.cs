@@ -51,6 +51,7 @@ namespace Module.CustomerControllerDomain
 
         private void MoveToNextCustomer()
         {
+            AnimateCameraSize(Consts.CamNearby, 0);
             // Amo.Instance.Log($"MoveToNextCustomer()");
             UniTask.Create(async () =>
             {
@@ -102,14 +103,12 @@ namespace Module.CustomerControllerDomain
 
         private async UniTask FailedAsync()
         {
-            RemoveAllCustomer();
 
             //todo: 波失敗扭來扭去
 
-            GameManager.Instance.SetPitchAndTimeScale(1,1);
-            await UniTask.Delay(TimeSpan.FromSeconds(Consts.AnimationName.FailedAnimationDuration));
-
-
+            GameManager.Instance.SetPitchAndTimeScale(1, 1);
+            await RemoveAllCustomerAsync();
+            //await UniTask.Delay(TimeSpan.FromSeconds(Consts.AnimationName.FailedAnimationDuration));
         }
 
         public Vector3 CalculateGridPosition(int index, Vector3 startPosition = default)
@@ -140,63 +139,65 @@ namespace Module.CustomerControllerDomain
             }
         }
 
+        public async UniTask RemoveAllCustomerAsync()
+        {
+            UIManager.Instance.EnableCutBtnInteractable(false);
+            var customersToRemove = customers.ToList();
+            // customers.Clear();
+            UIManager.Instance.ShowFinalResultUI(true);
+            var animationTasks = new List<UniTask>();
+
+            for (int i = 0; i < customersToRemove.Count; i++)
+            {
+                customersToRemove[i].EnableAnimator(false);
+                // Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}");
+
+                if (i == customersToRemove.Count - 1)
+                {
+                    customersToRemove[i].gameObject.transform.position = Vector3.one * 99999;
+                    // Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}", Color.red);
+                    continue;
+                }
+
+                var pos = CalculateGridPosition(i);
+                customersToRemove[i].gameObject.transform.localScale = new Vector3(1, 1, 1);
+
+                var customerTask = AnimateCustomerToPositionWithBounce(customersToRemove[i], pos, i * 0.05f);
+                animationTasks.Add(customerTask);
+            }
+
+            var cameraTask = AnimateCameraSize(Consts.CamFarway, 0.5f);
+
+            await UniTask.WhenAll(animationTasks.Concat(new[] { cameraTask }));
+
+            if (customers.Count > 2)
+            {
+                var waitTime = CalculateWaitTimeByCount(customersToRemove.Count);
+                await UniTask.Delay(TimeSpan.FromSeconds(waitTime));
+            }
+
+   
+            UIManager.Instance.EnableCutBtnInteractable(true);
+        }
+
         public void RemoveAllCustomer()
         {
-            UniTask.Create(async () =>
+            var customersToRemove = customers.ToList();
+            customers.Clear();
+            foreach (var customer in customersToRemove)
             {
-                var customersToRemove = customers.ToList();
-                customers.Clear();
-                UIManager.Instance.ShowFinalResultUI(true);
-                var animationTasks = new List<UniTask>();
-
-                for (int i = 0; i < customersToRemove.Count; i++)
-                {
-                    customersToRemove[i].EnableAnimator(false);
-                    // Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}");
-
-                    if (i == customersToRemove.Count - 1)
-                    {
-                        customersToRemove[i].gameObject.transform.position = Vector3.one * 99999;
-                        // Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}", Color.red);
-                        continue;
-                    }
-
-                    var pos = CalculateGridPosition(i);
-                    customersToRemove[i].gameObject.transform.localScale = new Vector3(1, 1, 1);
-
-                    var customerTask = AnimateCustomerToPositionWithBounce(customersToRemove[i], pos, i * 0.05f);
-                    animationTasks.Add(customerTask);
-                }
-
-                var cameraTask = AnimateCameraSize(Consts.CamFarway, 1.0f);
-
-                await UniTask.WhenAll(animationTasks.Concat(new[] { cameraTask }));
-
-                if (customers.Count > 2)
-                {
-                    var waitTime = CalculateWaitTimeByCount(customersToRemove.Count);
-                    await UniTask.Delay(TimeSpan.FromSeconds(waitTime));
-                }
-
-                foreach (var customer in customersToRemove)
-                {
-                    if (customer != null)
-                        Object.Destroy(customer.gameObject);
-                }
-                AnimateCameraSize(Consts.CamNearby, 0.1f);
-           
-                UIManager.Instance.ShowFinalResultUI(false);
-                UIManager.Instance.ShowMainuMenu(true);
-            });
+                if (customer != null)
+                    Object.Destroy(customer.gameObject);
+            }
         }
-        
+
         private float CalculateWaitTimeByCount(int customerCount)
         {
-            float baseTime = 0.6f;           // 基礎等待時間
-            float timePerCustomer = 0.3f;  // 每個客戶增加的時間
-            float maxWaitTime = Consts.FinalResultShowTime;        // 最大等待時間
-            float minWaitTime = 0.1f;        // 最小等待時間
-    
+            float baseTime = 0.2f; // 基礎等待時間
+            float timePerCustomer = 0.5f; // 每個客戶增加的時間
+            float maxWaitTime = Consts.FinalResultShowTime; // 最大等待時間
+            float minWaitTime = 0.1f; // 最小等待時間
+
             float calculatedTime = baseTime + (customerCount * timePerCustomer);
             return Mathf.Clamp(calculatedTime, minWaitTime, maxWaitTime);
         }
@@ -234,7 +235,7 @@ namespace Module.CustomerControllerDomain
                 {
                     float randomHeight = Random.Range(0.1f, 0.5f);
                     float randomDuration = Random.Range(0.1f, 0.3f);
-
+            
                     target.DOLocalMoveY(originalPos.y + randomHeight, randomDuration)
                         .SetEase(Ease.InOutSine);
                 }
@@ -254,6 +255,13 @@ namespace Module.CustomerControllerDomain
         private void RegisterEvents()
         {
             UIManager.Instance.OnNextCustomer += MoveToNextCustomer;
+            UIManager.Instance.OnCheckResult += Remove;
+        }
+
+        private void Remove()
+        {
+            AnimateCameraSize(Consts.CamNearby, 0);
+            RemoveAllCustomer();
         }
 
 
