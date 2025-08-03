@@ -6,6 +6,7 @@ using DG.Tweening;
 using Framework;
 using ManagerDomain;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -18,6 +19,13 @@ namespace Module.CustomerControllerDomain
         private int customerCount => customers.Count;
         private List<Customer> customers;
         private HairCutChecker hairCutChecker;
+
+        private GameObject JudgementLightObject;
+
+        private void Start()
+        {
+            JudgementLightObject = GameObject.Find("JudgementLight");
+        }
 
         public async UniTask InitializeAsync()
         {
@@ -105,7 +113,7 @@ namespace Module.CustomerControllerDomain
         {
 
             //todo: 波失敗扭來扭去
-
+            JudgementLightObject.GetComponent<JudgementLightController>().FailLight();
             GameManager.Instance.SetPitchAndTimeScale(1, 1);
             await RemoveAllCustomerAsync();
             //await UniTask.Delay(TimeSpan.FromSeconds(Consts.AnimationName.FailedAnimationDuration));

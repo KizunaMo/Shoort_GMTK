@@ -42,12 +42,15 @@ namespace ManagerDomain
 
         private RulerController rulerController;
 
+        private GameObject JudgementLightObject;
+
         public void Initialize()
         {
             checkReultBtn = GameObject.Find("CheckBtn").GetComponent<Button>();
             Assert.IsNotNull(checkReultBtn);
-            
-            
+
+            JudgementLightObject = GameObject.Find("JudgementLight");
+
             openingController = GameObject.Find(Consts.SceneGameObjectName.OpeningController).GetComponent<OpeningController>();
             Assert.IsNotNull(openingController);
 
@@ -165,6 +168,7 @@ namespace ManagerDomain
                     //����}�Y�e�� BGM
                     audioController.PlayMenuBGM();
                     openingController.ResetOpening();
+                    JudgementLightObject.GetComponent<JudgementLightController>().JudgementLight_Idle();
                     rulerController.RulerIdle();
                 }
             });

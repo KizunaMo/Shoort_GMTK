@@ -16,8 +16,8 @@ namespace ManagerDomain
 
 
         private AudioSource BGMaudioSouece;
-        
-        
+
+        private GameObject JudgementLightObject;
 
         private void Awake()
         {
@@ -38,6 +38,7 @@ namespace ManagerDomain
             score = 0;
 
             BGMaudioSouece = GameObject.Find("BGM").GetComponent<AudioSource>();
+            JudgementLightObject = GameObject.Find("JudgementLight");
 
             InitializeAllModule();
             customerController = new CustomerController();
@@ -62,6 +63,8 @@ namespace ManagerDomain
         public void AddScore()
         {
             score+=1000;
+
+            JudgementLightObject.GetComponent<JudgementLightController>().SuccessLight();
             //�[�t
             Time.timeScale += 0.01f;
 
