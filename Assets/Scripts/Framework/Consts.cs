@@ -24,6 +24,8 @@ namespace Framework
             
             public const string TimerUI = "Timer";
             public const string FinalResultCheckPanelUI = "FinalResultPanel";
+
+            public const string OpeningController = "Opening";
         }
 
 
