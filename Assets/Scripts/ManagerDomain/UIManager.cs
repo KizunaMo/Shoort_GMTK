@@ -13,6 +13,8 @@ namespace ManagerDomain
     //TEST
     public class UIManager : LazyMonoSingleton<UIManager>, IInitializable
     {
+        public event Action OnEachTimerEnd;
+        
         public AudioController AudioController => audioController;
         public event Action OnNextCustomer;
         public event Action OnCut;
@@ -78,6 +80,7 @@ namespace ManagerDomain
             ShowTimerUI(false);
             timerUI.OnTimerEnd += () =>
             {
+                OnEachTimerEnd?.Invoke();
                 timerUI.ResumeTimer();
                 NextCustomer();
             };

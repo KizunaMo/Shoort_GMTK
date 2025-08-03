@@ -1,4 +1,5 @@
 using System;
+using Framework;
 using ManagerDomain;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -36,10 +37,11 @@ public class Flavor : MonoBehaviour
 
 
     public Transform[] allHairStyles;
-    
-    
+
 
     public Transform[] CurrentHairStylePackage;
+
+    public ResultFaceAggregate resultFaceAggregate;
 
     public void Init()
     {
@@ -61,9 +63,34 @@ public class Flavor : MonoBehaviour
         RandomHand();
 
         UIManager.Instance.OnCut += CutAndChangeHairStyle;
+        UIManager.Instance.OnEachTimerEnd += ShowResultFace;
+    }
+
+    private void ShowResultFace()
+    {
+        DisableRoot(mouthRoot);
+        DisableRoot(eyesRoot);
+        DisableRoot(blinkRoot);
+        DisableRoot(makeupRoot);
+        resultFaceAggregate.HideAll();
+        Amo.Instance.Log($"??? 成功還是失敗？ {isSuccessCutResult}");
+        if (isSuccessCutResult)
+        {
+            
+            resultFaceAggregate.ShowRandomHappiness();
+        }
+        else
+        {
+            resultFaceAggregate.ShowRandomSad();
+        }
     }
 
 
+    public void DisableRoot(Transform root)
+    {
+        root.gameObject.SetActive(false);
+    }
+    
     private void OnDestroy()
     {
         UnregiserEvents();
@@ -72,9 +99,10 @@ public class Flavor : MonoBehaviour
     public void UnregiserEvents()
     {
         UIManager.Instance.OnCut -= CutAndChangeHairStyle;
+        UIManager.Instance.OnEachTimerEnd -= ShowResultFace;
     }
-    
-    
+
+
     public int GetHairCount()
     {
         var allHairCount = 3 + CurrentHairStylePackage.Length;
@@ -88,6 +116,8 @@ public class Flavor : MonoBehaviour
     {
         hairRoot.gameObject.SetActive(isShow);
         decorationRoot.gameObject.SetActive(isShow);
+        HideAll(allHair);
+        HideAll(allDecoration);
     }
 
     //多砍第三刀
@@ -110,8 +140,17 @@ public class Flavor : MonoBehaviour
         allHead[allHead.Length - 1].gameObject.SetActive(isShow);
     }
 
-
-    private int currentHairIndex;
+    private bool HasAnyActiveChild(Transform parent)
+    {
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            if (parent.GetChild(i).gameObject.activeSelf)
+                return true;
+        }
+        return false;
+    }
+    
+    //private int currentHairIndex;
 
     public void RandomCustomerHairStyle()
     {
@@ -127,7 +166,7 @@ public class Flavor : MonoBehaviour
         currentHairPackageStyleIndex = Random.Range(0, allHairStyles.Length);
         HideAll(allHairStyles);
         allHairStyles[currentHairPackageStyleIndex].gameObject.SetActive(true);
-        
+
         Transform selectedStyle = allHairStyles[currentHairPackageStyleIndex];
         int childCount = selectedStyle.childCount;
         CurrentHairStylePackage = new Transform[childCount];
@@ -186,7 +225,7 @@ public class Flavor : MonoBehaviour
 
     public void RandomHead()
     {
-        currentHeadIndex = Random.Range(0, allHead.Length-1);//不要光頭
+        currentHeadIndex = Random.Range(0, allHead.Length - 1); //不要光頭
         ShowCurrentHead();
     }
 
@@ -262,36 +301,69 @@ public class Flavor : MonoBehaviour
     private bool cutedNoMore;
     private bool cuted2;
     private bool cuted3;
+
+    private bool isSuccessCutResult;
+    private int GetActiveChildrenCount(Transform parent)
+    {
+        int count = 0;
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            if (parent.GetChild(i).gameObject.activeSelf)
+                count++;
+        }
+        return count;
+    }
     private void CutAndChangeHairStyle()
     {
-        // Amo.Instance.Log($"ChangeHairStyle {currentHairIndex}");
         var root = allHairStyles[currentHairPackageStyleIndex];
-        var allInclive =  IsOnlyLastChildActive(root); 
+        var hasAnyActiveChild = HasAnyActiveChild(root);
         var childTuple = FindNextOfFirstActiveChild(root);
-        if (!allInclive)
+        
+        Amo.Instance.Log($"=== CutAndChangeHairStyle Debug ===");
+        Amo.Instance.Log($"allInactive: {hasAnyActiveChild}");
+        Amo.Instance.Log($"cuted2: {cuted2}, cuted3: {cuted3}, cutedNoMore: {cutedNoMore}");
+        Amo.Instance.Log($"Active children count: {GetActiveChildrenCount(root)}");
+        
+        if (hasAnyActiveChild)
         {
+            isSuccessCutResult = false;
+            Amo.Instance.Log($"A {gameObject.name}");
             if (childTuple.nextItem != null)
             {
-                //Amo.Instance.Log($"Check first active child => {childTuple.activeItem} // {childTuple.nextItem}",Color.cyan);
+                Amo.Instance.Log($"Check first active child => {childTuple.activeItem.gameObject.name} // {childTuple.nextItem.gameObject.name}",Color.cyan);
                 childTuple.nextItem.gameObject.SetActive(true);
                 childTuple.activeItem.gameObject.SetActive(false);
+                if (childTuple.nextItem.gameObject.name == Consts.CustomKeywords.SuccessCutHairIndex)
+                {
+                    Amo.Instance.Log($"A 成功 Checking hair {childTuple.activeItem.name}");
+                    isSuccessCutResult = true;
+                }
+           }        
+            //Amo.Instance.Log($"Checking hair {childTuple.activeItem.name} // {childTuple.nextItem.name}");
+            if (childTuple.activeItem != null && childTuple.activeItem.gameObject.name == Consts.CustomKeywords.SuccessCutHairIndex)
+            {
+                Amo.Instance.Log($"BChecking hair {childTuple.activeItem.name}");
+                childTuple.activeItem.gameObject.SetActive(false);
+                isSuccessCutResult = false;
             }
+            
+            Amo.Instance.Log($"???? isSuccessCutResult {isSuccessCutResult}",Color.green);
         }
         else
         {
-            childTuple.activeItem.gameObject.SetActive(false);
-            
+            isSuccessCutResult = false;
+            Amo.Instance.Log($"B {gameObject.name}");
             if (!cuted2)
             {
-                // Amo.Instance.Log($"多砍第二刀");
+                Amo.Instance.Log($"多砍第二刀");
                 DisplayHairRootAndDecorationRoot(false);
-                cuted2= true;
+                cuted2 = true;
                 return;
             }
 
             if (!cuted3)
             {
-                // Amo.Instance.Log($"多砍第３刀");
+                Amo.Instance.Log($"多砍第３刀");
                 headRoot.gameObject.SetActive(true);
                 ShowCurrentHead();
                 DisplayHeadOne(true);
@@ -301,7 +373,7 @@ public class Flavor : MonoBehaviour
 
             if (!cutedNoMore)
             {
-                // Amo.Instance.Log($"砍到不能再砍");
+                Amo.Instance.Log($"砍到不能再砍");
                 headRoot.gameObject.SetActive(true);
                 HideAll(allHead);
                 DisplayHead0(true);
@@ -310,8 +382,8 @@ public class Flavor : MonoBehaviour
             }
         }
     }
-    
-    (Transform activeItem,Transform nextItem) FindNextOfFirstActiveChild(Transform root)
+
+    (Transform activeItem, Transform nextItem) FindNextOfFirstActiveChild(Transform root)
     {
         // Amo.Instance.Log("FindNextOfFirstActiveChild");
 
@@ -341,23 +413,37 @@ public class Flavor : MonoBehaviour
         // Amo.Instance.Log("No active child found => return null");
         return (null, null);
     }
-    
-    bool IsOnlyLastChildActive(Transform root)
+
+    public static bool IsOnlyLastChildActive(Transform parentTransform, bool checkHierarchy = false)
     {
-        int lastIndex = root.childCount - 1;
-        if (lastIndex < 0)
-            return false; // No children
-
-        for (int i = 0; i < lastIndex; i++)
+        if (parentTransform == null)
+            throw new ArgumentNullException(nameof(parentTransform));
+    
+        int childCount = parentTransform.childCount;
+        if (childCount == 0)
+            return false;
+    
+        int lastChildIndex = childCount - 1;
+        bool lastChildIsActive = false;
+    
+        for (int i = 0; i < childCount; i++)
         {
-            if (root.GetChild(i).gameObject.activeInHierarchy)
-                return false; // Any earlier child is active
+            bool isChildActive = checkHierarchy 
+                ? parentTransform.GetChild(i).gameObject.activeInHierarchy
+                : parentTransform.GetChild(i).gameObject.activeSelf;
+        
+            if (i == lastChildIndex)
+            {
+                lastChildIsActive = isChildActive;
+            }
+            else if (isChildActive)
+            {
+                return false;
+            }
         }
-
-        // Check if the last child is active
-        return root.GetChild(lastIndex).gameObject.activeInHierarchy;
+    
+        return lastChildIsActive;
     }
-
 
 
     private void CheckAllRootChilds()
