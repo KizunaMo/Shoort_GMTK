@@ -11,12 +11,12 @@ public class OpeningController : MonoBehaviour
 
     public void PlayOpening()
     {
-        OpeningAnimator.Play("MainMenuOpening"); ;
+        OpeningAnimator.Play("MainMenuOpening");
     }
 
     public void ResetOpening()
     {
-        OpeningAnimator.Play("MainMenuOpeningIdle"); ;
+        OpeningAnimator.Play("MainMenuOpeningIdle");
     }
 
 }
