@@ -26,6 +26,7 @@ namespace Framework
             public const string FinalResultCheckPanelUI = "FinalResultPanel";
 
             public const string OpeningController = "Opening";
+            public const string RulerController = "Ruler";
         }
 
 
