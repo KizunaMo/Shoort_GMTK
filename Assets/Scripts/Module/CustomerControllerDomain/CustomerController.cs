@@ -20,13 +20,6 @@ namespace Module.CustomerControllerDomain
         private List<Customer> customers;
         private HairCutChecker hairCutChecker;
 
-        private GameObject JudgementLightObject;
-
-        private void Start()
-        {
-            JudgementLightObject = GameObject.Find("JudgementLight");
-        }
-
         public async UniTask InitializeAsync()
         {
             await UniTask.CompletedTask;
@@ -86,6 +79,8 @@ namespace Module.CustomerControllerDomain
                     }
                     else
                     {
+
+                        GameManager.Instance.JudgementLightObject.FailLight();
                         UIManager.Instance.AudioController.PlaySoundEffect_Fail();
                         await previousCustomer.PlayAnimationAsync(Consts.AnimationName.Angry, Consts.AnimationName.AngryDuration);
 
@@ -113,7 +108,6 @@ namespace Module.CustomerControllerDomain
         {
 
             //todo: 波失敗扭來扭去
-            JudgementLightObject.GetComponent<JudgementLightController>().FailLight();
             GameManager.Instance.SetPitchAndTimeScale(1, 1);
             await RemoveAllCustomerAsync();
             //await UniTask.Delay(TimeSpan.FromSeconds(Consts.AnimationName.FailedAnimationDuration));

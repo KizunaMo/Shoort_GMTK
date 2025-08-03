@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using Framework;
 using Module.CustomerControllerDomain;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace ManagerDomain
@@ -17,7 +18,7 @@ namespace ManagerDomain
 
         private AudioSource BGMaudioSouece;
 
-        private GameObject JudgementLightObject;
+        public JudgementLightController JudgementLightObject;
 
         private void Awake()
         {
@@ -38,7 +39,7 @@ namespace ManagerDomain
             score = 0;
 
             BGMaudioSouece = GameObject.Find("BGM").GetComponent<AudioSource>();
-            JudgementLightObject = GameObject.Find("JudgementLight");
+            JudgementLightObject = GameObject.Find("JudgementLight").GetComponent<JudgementLightController>();
 
             InitializeAllModule();
             customerController = new CustomerController();
