@@ -78,7 +78,7 @@ public class Flavor : MonoBehaviour
     public int GetHairCount()
     {
         var allHairCount = 3 + CurrentHairStylePackage.Length;
-        Amo.Instance.Log($"GetHairCount {allHairCount} // CurrentHairStylePackage count {CurrentHairStylePackage.Length}");
+        // Amo.Instance.Log($"GetHairCount {allHairCount} // CurrentHairStylePackage count {CurrentHairStylePackage.Length}");
         return allHairCount;
     }
 
@@ -264,7 +264,7 @@ public class Flavor : MonoBehaviour
     private bool cuted3;
     private void CutAndChangeHairStyle()
     {
-        Amo.Instance.Log($"ChangeHairStyle {currentHairIndex}");
+        // Amo.Instance.Log($"ChangeHairStyle {currentHairIndex}");
         var root = allHairStyles[currentHairPackageStyleIndex];
         var allInclive =  IsOnlyLastChildActive(root);
         if (!allInclive)
@@ -272,7 +272,7 @@ public class Flavor : MonoBehaviour
             var childTuple = FindNextOfFirstActiveChild(root);
             if (childTuple.nextItem != null)
             {
-                Amo.Instance.Log($"Check first active child => {childTuple.activeItem} // {childTuple.nextItem}",Color.cyan);
+                //Amo.Instance.Log($"Check first active child => {childTuple.activeItem} // {childTuple.nextItem}",Color.cyan);
                 childTuple.nextItem.gameObject.SetActive(true);
                 childTuple.activeItem.gameObject.SetActive(false);
             }
@@ -281,7 +281,7 @@ public class Flavor : MonoBehaviour
         {
             if (!cuted2)
             {
-                Amo.Instance.Log($"多砍第二刀");
+                // Amo.Instance.Log($"多砍第二刀");
                 DisplayHairRootAndDecorationRoot(false);
                 cuted2= true;
                 return;
@@ -289,7 +289,7 @@ public class Flavor : MonoBehaviour
 
             if (!cuted3)
             {
-                Amo.Instance.Log($"多砍第３刀");
+                // Amo.Instance.Log($"多砍第３刀");
                 headRoot.gameObject.SetActive(true);
                 ShowCurrentHead();
                 DisplayHeadOne(true);
@@ -299,7 +299,7 @@ public class Flavor : MonoBehaviour
 
             if (!cutedNoMore)
             {
-                Amo.Instance.Log($"砍到不能再砍");
+                // Amo.Instance.Log($"砍到不能再砍");
                 headRoot.gameObject.SetActive(true);
                 HideAll(allHead);
                 DisplayHead0(true);
@@ -311,12 +311,12 @@ public class Flavor : MonoBehaviour
     
     (Transform activeItem,Transform nextItem) FindNextOfFirstActiveChild(Transform root)
     {
-        Amo.Instance.Log("FindNextOfFirstActiveChild");
+        // Amo.Instance.Log("FindNextOfFirstActiveChild");
 
         for (int i = 0; i < root.childCount; i++)
         {
             var child = root.GetChild(i);
-            Amo.Instance.Log($"Check {child.name} active => {child.gameObject.activeInHierarchy}");
+            // Amo.Instance.Log($"Check {child.name} active => {child.gameObject.activeInHierarchy}");
 
             if (child.gameObject.activeInHierarchy)
             {
@@ -325,18 +325,18 @@ public class Flavor : MonoBehaviour
                 if (nextIndex < root.childCount)
                 {
                     var nextChild = root.GetChild(nextIndex);
-                    Amo.Instance.Log($"Found active at {child.name}, next is {nextChild.name}");
+                    // Amo.Instance.Log($"Found active at {child.name}, next is {nextChild.name}");
                     return (child, nextChild);
                 }
                 else
                 {
-                    Amo.Instance.Log($"Found active at {child.name}, but it's the last one => return null");
+                    // Amo.Instance.Log($"Found active at {child.name}, but it's the last one => return null");
                     return (child, null);
                 }
             }
         }
 
-        Amo.Instance.Log("No active child found => return null");
+        // Amo.Instance.Log("No active child found => return null");
         return (null, null);
     }
     

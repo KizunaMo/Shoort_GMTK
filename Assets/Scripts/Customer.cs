@@ -18,7 +18,7 @@ public class Customer : MonoBehaviour
         flavor = GetComponent<Flavor>();
         flavor.Init();
         Assert.IsNotNull(flavor);
-        Amo.Instance.Log($"Initialize: ");
+        // Amo.Instance.Log($"Initialize: ");
         animator = GetComponentInChildren<Animator>(true);
         Assert.IsNotNull(animator);
         transform.position = Consts.spawnPosition;
@@ -61,7 +61,7 @@ public class Customer : MonoBehaviour
 
     public void DestorySelf()
     {
-        Amo.Instance.Log($"Destory self: {gameObject.name}");
+        // Amo.Instance.Log($"Destory self: {gameObject.name}");
         Destroy(gameObject);
     }
 

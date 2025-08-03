@@ -36,7 +36,7 @@ namespace Module.CustomerControllerDomain
     
         private void OnTimerComplete()
         {
-            Amo.Instance.Log("Timer completed!");
+            // Amo.Instance.Log("Timer completed!");
             OnTimerEnd?.Invoke();
         }
     }

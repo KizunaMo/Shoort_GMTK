@@ -36,13 +36,13 @@ namespace Module.CustomerControllerDomain
 
         public void Dispose()
         {
-            Amo.Instance.Log($"CustomerControllerDomain.Dispose()");
+            // Amo.Instance.Log($"CustomerControllerDomain.Dispose()");
             UnregisterEvents();
         }
 
         public Customer CreateCustomer()
         {
-            Amo.Instance.Log($"CreateCustomer()");
+            // Amo.Instance.Log($"CreateCustomer()");
             var newCustomer = Object.Instantiate(Resources.Load<Customer>(Consts.PrefabsPath.CustomerItemPrefab));
             newCustomer.Initialize();
             return newCustomer;
@@ -51,7 +51,7 @@ namespace Module.CustomerControllerDomain
 
         private void MoveToNextCustomer()
         {
-            Amo.Instance.Log($"MoveToNextCustomer()");
+            // Amo.Instance.Log($"MoveToNextCustomer()");
             UniTask.Create(async () =>
             {
                 UIManager.Instance.EnableCutBtnInteractable(false);
@@ -68,7 +68,7 @@ namespace Module.CustomerControllerDomain
                         await UniTask.WhenAll(allTask);
                     }
 
-                    Amo.Instance.Log($"CHECK success {isSuccess}");
+                    // Amo.Instance.Log($"CHECK success {isSuccess}");
                     if (isSuccess)
                     {
                         GameManager.Instance.AddScore();
@@ -152,12 +152,12 @@ namespace Module.CustomerControllerDomain
                 for (int i = 0; i < customersToRemove.Count; i++)
                 {
                     customersToRemove[i].EnableAnimator(false);
-                    Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}");
+                    // Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}");
 
                     if (i == customersToRemove.Count - 1)
                     {
                         customersToRemove[i].gameObject.transform.position = Vector3.one * 99999;
-                        Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}", Color.red);
+                        // Amo.Instance.Log($"CustomerControllerDomain.RemoveAllCustomer() {customersToRemove[i].gameObject.name}", Color.red);
                         continue;
                     }
 
@@ -295,18 +295,18 @@ namespace Module.CustomerControllerDomain
 
             if (totalHairCount == successIndex)
             {
-                Amo.Instance.Log($"Cut hair success!! {totalHairCount}", Color.green);
+                //Amo.Instance.Log($"Cut hair success!! {totalHairCount}", Color.green);
             }
             else
             {
-                Amo.Instance.Log($"Cut hair {totalHairCount}", Color.cyan);
+                //Amo.Instance.Log($"Cut hair {totalHairCount}", Color.cyan);
             }
         }
 
         public bool IsCutSuccess()
         {
             var isSuccess = totalHairCount == successIndex;
-            Amo.Instance.Log($" total hair count is {totalHairCount} ");
+            // Amo.Instance.Log($" total hair count is {totalHairCount} ");
             return isSuccess;
         }
     }
