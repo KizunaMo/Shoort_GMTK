@@ -144,8 +144,8 @@ namespace ManagerDomain
         {
             UniTask.Create(async () =>
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(1));
                 mainMenu.SetActive(isShow);
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
                 if (isShow)
                 {
                     //����}�Y�e�� BGM
